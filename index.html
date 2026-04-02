@@ -1135,23 +1135,41 @@
         </div>
 
         <!-- User API Key -->
-        <div style="margin-bottom:12px;">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap;">
-                <span style="font-size:0.75rem;color:#94a3b8;">🔑 Gemini API Key</span>
-                <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="font-size:0.65rem;color:#6366f1;text-decoration:none;border:1px solid rgba(99,102,241,0.3);padding:2px 6px;border-radius:4px;">สร้างฟรี</a>
-                <span id="apiKeySavedBadge" style="display:none;font-size:0.62rem;color:#10b981;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.22);padding:2px 8px;border-radius:999px;">บันทึกในเครื่องแล้ว</span>
-            </div>
-            <div style="position:relative;">
-                <input type="password" id="userApiKey" placeholder="วาง Gemini API Key ของคุณ" style="width:100%;box-sizing:border-box;background:rgba(15,23,42,0.6);border:1px solid rgba(99,102,241,0.2);border-radius:8px;padding:8px 42px 8px 12px;color:#e2e8f0;font-size:0.8rem;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='rgba(99,102,241,0.2)'">
-                <button type="button" id="toggleApiKeyBtn" onclick="toggleApiKeyVisibility()" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:#94a3b8;cursor:pointer;font-size:0.95rem;">👁️</button>
-            </div>
-            <div style="display:flex;gap:8px;margin-top:8px;">
-                <button type="button" onclick="connectGeminiApiKey()" style="flex:1;background:linear-gradient(135deg,#6366f1,#4f46e5);border:none;color:#fff;font-size:0.75rem;padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:600;">เชื่อมต่อ Key</button>
-                <button type="button" onclick="testGeminiApiKey()" style="flex:1;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);color:#c7d2fe;font-size:0.75rem;padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:600;">ทดสอบ Key</button>
-                <button type="button" onclick="clearUserApiKey()" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.25);color:#fca5a5;font-size:0.75rem;padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:600;">ลบ</button>
-            </div>
-            <div id="apiKeyStatus" style="font-size:0.64rem;color:#64748b;margin-top:6px;line-height:1.5;">ยังไม่ได้เชื่อมต่อ Gemini API Key • ระบบจะเก็บ Key ใน localStorage ของเครื่องนี้เท่านั้น</div>
+<div style="margin-bottom:12px;border:1px solid rgba(99,102,241,0.18);border-radius:12px;overflow:hidden;background:rgba(99,102,241,0.04);">
+    
+    <!-- Header ปุ่มยุบ/ขยาย -->
+    <button
+        type="button"
+        onclick="toggleApiKeyPanel()"
+        style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;background:transparent;border:none;color:#e2e8f0;cursor:pointer;font-weight:600;font-size:0.8rem;"
+    >
+        <span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <span>🔑 Gemini API Key</span>
+            <span id="apiKeySavedBadge" style="display:none;font-size:0.62rem;color:#10b981;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.22);padding:2px 8px;border-radius:999px;">บันทึกในเครื่องแล้ว</span>
+        </span>
+        <span id="apiKeyCollapseIcon" style="font-size:0.85rem;color:#94a3b8;">▼</span>
+    </button>
+
+    <!-- Content -->
+    <div id="apiKeyPanelContent" style="display:none;padding:0 14px 14px 14px;border-top:1px solid rgba(99,102,241,0.12);">
+        <div style="display:flex;align-items:center;gap:6px;margin:10px 0 6px;flex-wrap:wrap;">
+            <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="font-size:0.65rem;color:#6366f1;text-decoration:none;border:1px solid rgba(99,102,241,0.3);padding:2px 6px;border-radius:4px;">สร้างฟรี</a>
         </div>
+
+        <div style="position:relative;">
+            <input type="password" id="userApiKey" placeholder="วาง Gemini API Key ของคุณ" style="width:100%;box-sizing:border-box;background:rgba(15,23,42,0.6);border:1px solid rgba(99,102,241,0.2);border-radius:8px;padding:8px 42px 8px 12px;color:#e2e8f0;font-size:0.8rem;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='rgba(99,102,241,0.2)'">
+            <button type="button" id="toggleApiKeyBtn" onclick="toggleApiKeyVisibility()" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:#94a3b8;cursor:pointer;font-size:0.95rem;">👁️</button>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:8px;">
+            <button type="button" onclick="connectGeminiApiKey()" style="flex:1;background:linear-gradient(135deg,#6366f1,#4f46e5);border:none;color:#fff;font-size:0.75rem;padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:600;">เชื่อมต่อ Key</button>
+            <button type="button" onclick="testGeminiApiKey()" style="flex:1;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);color:#c7d2fe;font-size:0.75rem;padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:600;">ทดสอบ Key</button>
+            <button type="button" onclick="confirmClearUserApiKey()" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.25);color:#fca5a5;font-size:0.75rem;padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:600;">ลบ</button>
+        </div>
+
+        <div id="apiKeyStatus" style="font-size:0.64rem;color:#64748b;margin-top:6px;line-height:1.5;">ยังไม่ได้เชื่อมต่อ Gemini API Key • ระบบจะเก็บ Key ใน localStorage ของเครื่องนี้เท่านั้น</div>
+    </div>
+</div>
 
         <!-- Generate -->
         <button class="generate-btn gemini-btn" onclick="generateGeminiStoryboard()">
@@ -4804,6 +4822,7 @@ function connectGeminiApiKey() {
         return;
     }
     saveUserApiKey(key);
+	toggleApiKeyPanel(true);
     setApiKeyStatus(`บันทึก Gemini API Key แล้ว: ${maskApiKey(key)}`, 'success');
 }
 
@@ -4822,6 +4841,46 @@ function toggleApiKeyVisibility() {
     const isPassword = input.type === 'password';
     input.type = isPassword ? 'text' : 'password';
     btn.textContent = isPassword ? '🙈' : '👁️';
+}
+
+const API_KEY_PANEL_STORAGE = 'gemini_api_panel_expanded';
+
+function toggleApiKeyPanel(forceExpand = null) {
+    const panel = document.getElementById('apiKeyPanelContent');
+    const icon = document.getElementById('apiKeyCollapseIcon');
+    if (!panel || !icon) return;
+
+    const isCurrentlyOpen = panel.style.display !== 'none';
+    const shouldOpen = forceExpand === null ? !isCurrentlyOpen : !!forceExpand;
+
+    panel.style.display = shouldOpen ? 'block' : 'none';
+    icon.textContent = shouldOpen ? '▲' : '▼';
+
+    localStorage.setItem(API_KEY_PANEL_STORAGE, shouldOpen ? '1' : '0');
+}
+
+function initApiKeyPanel() {
+    const saved = localStorage.getItem(API_KEY_PANEL_STORAGE);
+
+    // ค่าเริ่มต้นยุบ
+    if (saved === '1') {
+        toggleApiKeyPanel(true);
+    } else {
+        toggleApiKeyPanel(false);
+    }
+}
+
+function confirmClearUserApiKey() {
+    const existingKey = getUserApiKey() || document.getElementById('userApiKey')?.value || '';
+    if (!existingKey.trim()) {
+        setApiKeyStatus('ยังไม่มี Gemini API Key ให้ลบ', 'idle');
+        return;
+    }
+
+    const ok = confirm('ยืนยันการลบ Gemini API Key ออกจากเครื่องนี้?');
+    if (!ok) return;
+
+    clearUserApiKey();
 }
 
 async function testGeminiApiKey() {
@@ -4868,7 +4927,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
     refreshApiKeyUI();
+    initApiKeyPanel();
 });
 
 // ===== DIRECT GEMINI API (ใช้เฉพาะ Key ที่ผู้ใช้บันทึกไว้ในเครื่อง) =====
