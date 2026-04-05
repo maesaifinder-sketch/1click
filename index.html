@@ -1136,12 +1136,21 @@
 
         <!-- User API Key -->
         <div style="margin-bottom:12px;">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-                <span style="font-size:0.75rem;color:#94a3b8;">🔑 Gemini API Key (ไม่บังคับ)</span>
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap;">
+                <span style="font-size:0.75rem;color:#94a3b8;">🔑 Gemini API Key</span>
                 <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="font-size:0.65rem;color:#6366f1;text-decoration:none;border:1px solid rgba(99,102,241,0.3);padding:2px 6px;border-radius:4px;">สร้างฟรี</a>
+                <span id="apiKeySavedBadge" style="display:none;font-size:0.62rem;color:#10b981;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.22);padding:2px 8px;border-radius:999px;">บันทึกในเครื่องแล้ว</span>
             </div>
-            <input type="password" id="userApiKey" placeholder="วาง API Key ของคุณที่นี่ (ถ้ามี)" style="width:100%;box-sizing:border-box;background:rgba(15,23,42,0.6);border:1px solid rgba(99,102,241,0.2);border-radius:8px;padding:8px 12px;color:#e2e8f0;font-size:0.8rem;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='rgba(99,102,241,0.2)'" oninput="saveUserApiKey(this.value)">
-            <div style="font-size:0.6rem;color:#64748b;margin-top:4px;">ใส่ Key ส่วนตัวเพื่อไม่ต้องรอคิว • Key จะเก็บในเครื่องคุณเท่านั้น</div>
+            <div style="position:relative;">
+                <input type="password" id="userApiKey" placeholder="วาง Gemini API Key ของคุณ" style="width:100%;box-sizing:border-box;background:rgba(15,23,42,0.6);border:1px solid rgba(99,102,241,0.2);border-radius:8px;padding:8px 42px 8px 12px;color:#e2e8f0;font-size:0.8rem;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='rgba(99,102,241,0.2)'">
+                <button type="button" id="toggleApiKeyBtn" onclick="toggleApiKeyVisibility()" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:#94a3b8;cursor:pointer;font-size:0.95rem;">👁️</button>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:8px;">
+                <button type="button" onclick="connectGeminiApiKey()" style="flex:1;background:linear-gradient(135deg,#6366f1,#4f46e5);border:none;color:#fff;font-size:0.75rem;padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:600;">เชื่อมต่อ Key</button>
+                <button type="button" onclick="testGeminiApiKey()" style="flex:1;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);color:#c7d2fe;font-size:0.75rem;padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:600;">ทดสอบ Key</button>
+                <button type="button" onclick="clearUserApiKey()" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.25);color:#fca5a5;font-size:0.75rem;padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:600;">ลบ</button>
+            </div>
+            <div id="apiKeyStatus" style="font-size:0.64rem;color:#64748b;margin-top:6px;line-height:1.5;">ยังไม่ได้เชื่อมต่อ Gemini API Key • ระบบจะเก็บ Key ใน localStorage ของเครื่องนี้เท่านั้น</div>
         </div>
 
         <!-- Generate -->
@@ -4728,21 +4737,119 @@ function generateSessionId() {
     return 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
 }
 
-// ===== USER API KEY (ใช้ key ส่วนตัวของ user — optional pass-through to server) =====
-function saveUserApiKey(key) {
-    if (key && key.trim()) {
-        localStorage.setItem('userGeminiApiKey', key.trim());
-    } else {
-        localStorage.removeItem('userGeminiApiKey');
+// ===== USER API KEY (เก็บไว้ในเครื่องผู้ใช้ด้วย localStorage) =====
+const USER_GEMINI_API_KEY_STORAGE = 'userGeminiApiKey';
+
+function maskApiKey(key) {
+    if (!key) return 'ยังไม่ได้เชื่อมต่อ';
+    if (key.length <= 10) return key;
+    return `${key.slice(0, 6)}••••••${key.slice(-4)}`;
+}
+
+function setApiKeyStatus(message, type = 'idle') {
+    const el = document.getElementById('apiKeyStatus');
+    if (!el) return;
+    const colorMap = {
+        idle: '#64748b',
+        success: '#10b981',
+        error: '#f87171',
+        loading: '#fbbf24'
+    };
+    el.style.color = colorMap[type] || colorMap.idle;
+    el.textContent = message;
+}
+
+function refreshApiKeyUI() {
+    const savedKey = localStorage.getItem(USER_GEMINI_API_KEY_STORAGE) || '';
+    const input = document.getElementById('userApiKey');
+    const badge = document.getElementById('apiKeySavedBadge');
+    if (input && document.activeElement !== input) {
+        input.value = savedKey;
     }
+    if (badge) {
+        badge.style.display = savedKey ? 'inline-block' : 'none';
+    }
+    setApiKeyStatus(
+        savedKey
+            ? `เชื่อมต่อแล้ว: ${maskApiKey(savedKey)} • Key นี้ถูกเก็บในเครื่องเบราว์เซอร์นี้เท่านั้น`
+            : 'ยังไม่ได้เชื่อมต่อ Gemini API Key • ระบบจะเก็บ Key ใน localStorage ของเครื่องนี้เท่านั้น',
+        savedKey ? 'success' : 'idle'
+    );
+}
+
+function saveUserApiKey(key) {
+    const cleanKey = (key || '').trim();
+    if (cleanKey) {
+        localStorage.setItem(USER_GEMINI_API_KEY_STORAGE, cleanKey);
+    } else {
+        localStorage.removeItem(USER_GEMINI_API_KEY_STORAGE);
+    }
+    refreshApiKeyUI();
 }
 
 function getUserApiKey() {
-    return localStorage.getItem('userGeminiApiKey') || '';
+    return localStorage.getItem(USER_GEMINI_API_KEY_STORAGE) || '';
 }
 
 function getActiveApiKey() {
     return getUserApiKey();
+}
+
+function connectGeminiApiKey() {
+    const input = document.getElementById('userApiKey');
+    const key = (input?.value || '').trim();
+    if (!key) {
+        setApiKeyStatus('กรุณาวาง Gemini API Key ก่อนเชื่อมต่อ', 'error');
+        if (input) input.focus();
+        return;
+    }
+    saveUserApiKey(key);
+    setApiKeyStatus(`บันทึก Gemini API Key แล้ว: ${maskApiKey(key)}`, 'success');
+}
+
+function clearUserApiKey() {
+    localStorage.removeItem(USER_GEMINI_API_KEY_STORAGE);
+    const input = document.getElementById('userApiKey');
+    if (input) input.value = '';
+    refreshApiKeyUI();
+    setApiKeyStatus('ลบ Gemini API Key ออกจากเครื่องนี้แล้ว', 'idle');
+}
+
+function toggleApiKeyVisibility() {
+    const input = document.getElementById('userApiKey');
+    const btn = document.getElementById('toggleApiKeyBtn');
+    if (!input || !btn) return;
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+    btn.textContent = isPassword ? '🙈' : '👁️';
+}
+
+async function testGeminiApiKey() {
+    const key = (document.getElementById('userApiKey')?.value || getUserApiKey()).trim();
+    if (!key) {
+        setApiKeyStatus('ยังไม่มี Key สำหรับทดสอบ', 'error');
+        return;
+    }
+    setApiKeyStatus('กำลังทดสอบ Gemini API Key...', 'loading');
+    try {
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ role: 'user', parts: [{ text: 'ตอบกลับคำว่า OK เท่านั้น' }] }],
+                generationConfig: { temperature: 0, maxOutputTokens: 8 }
+            })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+            throw new Error(data.error?.message || `Gemini API Error ${response.status}`);
+        }
+        saveUserApiKey(key);
+        setApiKeyStatus(`ทดสอบสำเร็จ • พร้อมใช้งาน: ${maskApiKey(key)}`, 'success');
+    } catch (err) {
+        setApiKeyStatus(`ทดสอบไม่ผ่าน: ${err.message}`, 'error');
+    }
 }
 
 // โหลด user key จาก localStorage เมื่อเปิดหน้าเว็บ
@@ -4752,13 +4859,115 @@ document.addEventListener('DOMContentLoaded', () => {
     if (input && savedKey) {
         input.value = savedKey;
     }
+    if (input) {
+        input.addEventListener('input', () => setApiKeyStatus('มีการแก้ไข Key ในช่องกรอก • กด "เชื่อมต่อ Key" หรือ "ทดสอบ Key" เพื่อบันทึก', 'loading'));
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                connectGeminiApiKey();
+            }
+        });
+    }
+    refreshApiKeyUI();
 });
 
-// ===== DIRECT GEMINI API (ไม่ผ่าน Cloud Functions — ใช้ prompt เต็มจาก prompts-client.js) =====
-const GEMINI_API_KEY = 'AIzaSyARSj0cAw4At9k1AzIsXX3e41ZTsEEPLSw';
+// ===== DIRECT GEMINI API (ใช้เฉพาะ Key ที่ผู้ใช้บันทึกไว้ในเครื่อง) =====
+
+function buildGeminiSystemPrompt(sceneCount, sceneNums, hasImage, promptMode, stylePersonalities, visualStylePrompt, platformMode, includeTextOverlay, glassSkin) {
+    const sceneList = Array.isArray(sceneNums) && sceneNums.length ? sceneNums.join(', ') : String(sceneCount || '');
+    const sceneCountSafe = Array.isArray(sceneNums) && sceneNums.length ? sceneNums.length : Number(sceneCount || 1);
+    const isReviewMode = promptMode === 'review';
+    const platformLabel = platformMode === 'supergrok'
+        ? 'Super Grok'
+        : (platformMode === 'grok' ? 'Grok' : 'Flow');
+    const durationGuide = platformMode === 'supergrok'
+        ? 'ต่อซีนประมาณ 10 วินาที / 30-40 คำ'
+        : (platformMode === 'grok' ? 'ต่อซีนประมาณ 6 วินาที / 15-20 คำ' : 'ต่อซีนประมาณ 8 วินาที / 20-30 คำ');
+    const overlayRule = includeTextOverlay
+        ? `TEXT OVERLAY บังคับ: แต่ละซีนสามารถมีข้อความสั้นแบบ H1/H2 ภาษาไทยได้เมื่อเหมาะสม โดยต้องสั้น อ่านง่าย กระแทกตา และสัมพันธ์กับซีน แต่ห้ามยาวเกินจำเป็น`
+        : `NO TEXT IN IMAGE: ห้ามมีข้อความบนภาพ ห้าม title card ห้าม subtitle ห้าม UI text ห้ามตัวอักษรลอยบนฉาก ยกเว้นข้อความที่ติดอยู่บนแพ็กเกจสินค้าจริง`;
+    const glassSkinRule = glassSkin
+        ? 'ตัวละครผิวฉ่ำวาว สวยเนียน มี glow แบบ premium แต่ยังดูคมชัด'
+        : 'ผิวและวัสดุสมจริงตามสไตล์ที่เลือก โดยไม่บังคับ glass skin';
+    const imageRefRule = hasImage
+        ? 'มีรูปอ้างอิงแนบมาแล้ว: ต้องยึดสินค้าหรือวัตถุจากรูปอ้างอิงเป็นหลัก ห้ามเปลี่ยนสี โลโก้ รูปร่าง แพ็กเกจ หรือจุดเด่นสำคัญ'
+        : 'ถ้าไม่มีรูปอ้างอิง ให้ตีความจากคำสั่งผู้ใช้แบบสมเหตุสมผลและคงความต่อเนื่องทุกซีน';
+    const modeBlock = isReviewMode
+        ? `คุณคือ UGC Product Review Director ระดับเทพสำหรับคอนเทนต์ขายของแนว TikTok/Short Video
+โฟกัส: คนจริงรีวิวสินค้า พูดไทยธรรมชาติ ขายเก่งแต่ไม่แข็ง`
+        : `คุณคือ Pixar / 3D Storyboard Director ระดับเทพสำหรับคอนเทนต์ไวรัล
+โฟกัส: เล่าเรื่องเป็นซีน ชัดเจน สนุก เข้าใจง่าย ดึงอารมณ์ และขายได้`;
+    const visualBlock = visualStylePrompt
+        ? `VISUAL STYLE LOCK:
+${visualStylePrompt}`
+        : 'VISUAL STYLE LOCK: เลือกภาพให้สวยระดับ cinematic, composition ชัด, subject เด่น, continuity ดี';
+    const personalityBlock = stylePersonalities && String(stylePersonalities).trim()
+        ? `NARRATIVE STYLE ที่ต้องผสม:
+${String(stylePersonalities).trim()}`
+        : 'NARRATIVE STYLE: เลือกน้ำเสียงและจังหวะเล่าเรื่องที่เหมาะกับโจทย์โดยอัตโนมัติ';
+
+    return `${modeBlock}
+
+งานของคุณคือสร้างผลลัพธ์ Storyboard แบบละเอียด จำนวน ${sceneCountSafe} ซีน (${sceneList}) สำหรับ ${platformLabel}
+GUIDE: ${durationGuide}
+
+กฎหลัก:
+1. ต้องตอบให้ครบทุกซีน ห้ามข้าม ห้ามรวมซีน
+2. Dialogue ต้องเป็นภาษาไทย 100% ถ้า user ไม่ได้ขอภาษาอื่น
+3. แต่ละซีนต้องมี Speaker, Dialogue, Action, Image Prompt, Video Prompt
+4. Image Prompt และ Video Prompt ต้องเขียนเป็นภาษาอังกฤษเชิง production prompt พร้อมใช้งาน
+5. ทุกซีนต้องมี continuity ของตัวละคร โทนภาพ และเรื่องราว
+6. ${imageRefRule}
+7. ${overlayRule}
+8. ${glassSkinRule}
+9. ห้ามใช้ markdown table
+10. ห้ามอธิบายนอก format ที่กำหนด
+
+${personalityBlock}
+
+${visualBlock}
+
+FORMAT บังคับที่ต้องตอบ:
+🎬 STORYBOARD OVERVIEW
+- Hook:
+- Core idea:
+- Visual direction:
+- Selling direction:
+
+FULL STORYBOARD
+
+===
+SCENE 1 : [ชื่อฉาก]
+(Picture Ref: [ถ้ามีใส่ชื่ออ้างอิงสั้นๆ ถ้าไม่มีเว้นเป็น -])
+Speaker: [ชื่อตัวละครหรือผู้พูด]
+Dialogue: "[บทพูดภาษาไทย]"
+Action: [อธิบายการกระทำ / สีหน้า / กล้อง]
+
+🔴 GEN IMAGE PROMPT
+[Image prompt ภาษาอังกฤษแบบพร้อมใช้]
+
+🟢 GEN VIDEO PROMPT
+[Video prompt ภาษาอังกฤษแบบพร้อมใช้]
+===
+
+ทำซ้ำรูปแบบนี้จนครบทุกซีนตามจำนวนที่กำหนด
+
+หลังซีนสุดท้ายให้ปิดท้ายด้วย:
+---CAPTION_START---
+[caption ภาษาไทย 1 ชุด]
+---CAPTION_END---
+
+---HASHTAG_START---
+[hashtags 1 บรรทัด]
+---HASHTAG_END---`;
+}
+
 
 async function callGeminiDirect(settings) {
-    const apiKey = getUserApiKey() || GEMINI_API_KEY;
+    const apiKey = getUserApiKey();
+    if (!apiKey) {
+        throw new Error('ยังไม่ได้เชื่อมต่อ Gemini API Key กรุณาวาง Key แล้วกด "เชื่อมต่อ Key" ก่อน');
+    }
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
     
     console.log('[Direct] Calling Gemini API directly from client...', { includeTextOverlay: settings.includeTextOverlay, promptMode: settings.promptMode });
@@ -4856,7 +5065,10 @@ async function callGeminiViaCloud(settings) {
 
 // ===== FALLBACK: Direct Gemini Continue (เมื่อ Cloud Function 503) =====
 async function callGeminiContinueDirect(userInput, systemPrompt, clientChatHistory) {
-    const apiKey = getUserApiKey() || GEMINI_API_KEY;
+    const apiKey = getUserApiKey();
+    if (!apiKey) {
+        throw new Error('ยังไม่ได้เชื่อมต่อ Gemini API Key กรุณาวาง Key แล้วกด "เชื่อมต่อ Key" ก่อน');
+    }
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
     
     console.log('[Fallback] Calling Gemini Continue directly...');
