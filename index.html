@@ -4,7 +4,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>1click1story — Viral Intelligence 2026 (v2.1)</title>
+    <title>MAKE-story — Viral Intelligence 2026 (v2.1)</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=Prompt:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -936,9 +936,9 @@
 <!-- Header -->
 <div class="header">
     <img src="./logo.png" alt="Logo" class="header-logo">
-    <h1>1CLICK1STORY</h1>
-    <div class="status-badge">🚀 GOD MODE ACTIVATED <span>(Powered by Viral Trends Mar 2026)</span></div>
-    <p>for labs.google/flow — 8-Scene Storyboard + Prompt Generator</p>
+    <h1>MAKE-STORY</h1>
+    <div class="status-badge">🚀 GOD MODE ACTIVATED <span>(Linen7)</span></div>
+    <p>for Storyboard + Prompt Generator</p>
 </div>
 
 <!-- Animated Waves -->
@@ -1136,20 +1136,26 @@
 
         <!-- AI Provider -->
         <div style="margin-bottom:12px;">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-                <span style="font-size:0.75rem;color:#94a3b8;">🤖 AI Provider</span>
-            </div>
-            <div class="prompt-mode-group">
-                <button type="button" class="platform-mode-btn active" data-provider="gemini" onclick="selectApiProvider(this)">
-                    <span class="mode-icon">💎</span>
-                    Gemini
-                    <span class="mode-label">Direct API</span>
-                </button>
-                <button type="button" class="platform-mode-btn" data-provider="openai" onclick="selectApiProvider(this)">
-                    <span class="mode-icon">🧠</span>
-                    OpenAI
-                    <span class="mode-label">Chat API</span>
-                </button>
+            <button type="button" onclick="toggleProviderSection()" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.18);border-radius:12px;padding:10px 12px;color:#cbd5e1;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(99,102,241,0.14)'" onmouseout="this.style.background='rgba(99,102,241,0.08)'">
+                <span style="display:flex;align-items:center;gap:8px;font-size:0.75rem;font-weight:600;">
+                    <span>🤖</span>
+                    <span>AI Provider</span>
+                </span>
+                <span id="providerCollapseIcon" style="font-size:0.75rem;color:#94a3b8;">▼</span>
+            </button>
+            <div id="providerSectionBody" style="display:none;margin-top:10px;">
+                <div class="prompt-mode-group">
+                    <button type="button" class="platform-mode-btn active" data-provider="gemini" onclick="selectApiProvider(this)">
+                        <span class="mode-icon">💎</span>
+                        Gemini
+                        <span class="mode-label">Direct API</span>
+                    </button>
+                    <button type="button" class="platform-mode-btn" data-provider="openai" onclick="selectApiProvider(this)">
+                        <span class="mode-icon">🧠</span>
+                        OpenAI
+                        <span class="mode-label">Chat API</span>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -1165,7 +1171,7 @@
 
         <!-- Generate -->
         <button class="generate-btn gemini-btn" onclick="generateGeminiStoryboard()">
-            💎 1click1story — สร้าง Full Storyboard
+            💎 MAKE-story — สร้าง Full Storyboard
         </button>
         
         <!-- Import JSON -->
@@ -1183,7 +1189,7 @@
         <!-- Empty State -->
         <div class="empty-state" id="emptyState">
             <div class="empty-icon">🚀</div>
-            <h3>1click1story</h3>
+            <h3>MAKE-story</h3>
             <p>🧠 Viral Intelligence 2026<br>REALI-TEA / PATTERN INTERRUPT / SHOPPERTAINMENT / SONIC DRIVER<br><br>เลือกสิ่งของ, จำนวนฉาก, Narrative Style, Mood<br>แล้วกด "สร้าง Prompt ทั้งหมด" ระบบจะสร้าง Image + Video Prompt ให้ทันที</p>
         </div>
 
@@ -4808,6 +4814,16 @@ function handleApiKeyInput(value) {
         saveUserGeminiApiKey(value);
     }
 }
+function toggleProviderSection(forceExpand = null) {
+    const body = document.getElementById('providerSectionBody');
+    const icon = document.getElementById('providerCollapseIcon');
+    if (!body || !icon) return;
+
+    const shouldExpand = forceExpand === null ? body.style.display === 'none' : !!forceExpand;
+    body.style.display = shouldExpand ? 'block' : 'none';
+    icon.textContent = shouldExpand ? '▲' : '▼';
+}
+
 
 function selectApiProvider(btn) {
     document.querySelectorAll('[data-provider]').forEach(el => el.classList.remove('active'));
@@ -4852,6 +4868,7 @@ function getProviderLabel() {
 
 // โหลด provider + key จาก localStorage เมื่อเปิดหน้าเว็บ
 document.addEventListener('DOMContentLoaded', () => {
+    toggleProviderSection(false);
     refreshProviderUI();
 });
 
