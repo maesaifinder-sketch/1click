@@ -4,7 +4,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>make-story — Viral Intelligence 2026 (v2.1)</title>
+    <title>1click1story — Viral Intelligence 2026 (v2.1)</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=Prompt:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -935,9 +935,9 @@
 
 <!-- Header -->
 <div class="header">
-    <img src="./logo.png" alt="Logo" class="header-logo">
-    <h1>MAKE-STORY</h1>
-    <div class="status-badge">🚀 GOD MODE ACTIVATED <span>(Powered by Linen7 2026)</span></div>
+    <img src="/logo.png" alt="Logo" class="header-logo">
+    <h1>1CLICK1STORY</h1>
+    <div class="status-badge">🚀 GOD MODE ACTIVATED <span>(Powered by Viral Trends Mar 2026)</span></div>
     <p>for labs.google/flow — 8-Scene Storyboard + Prompt Generator</p>
 </div>
 
@@ -1134,49 +1134,33 @@
             </label>
         </div>
 
-        <!-- AI Provider + API Key Manager -->
+        <!-- AI Provider -->
         <div style="margin-bottom:12px;">
-            <button type="button" onclick="toggleProviderSection()" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.18);border-radius:12px;padding:10px 12px;color:#cbd5e1;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(99,102,241,0.14)'" onmouseout="this.style.background='rgba(99,102,241,0.08)'">
-                <span style="display:flex;align-items:center;gap:8px;font-size:0.75rem;font-weight:600;">
-                    <span>🤖</span>
-                    <span>AI Provider</span>
-                </span>
-                <span id="providerCollapseIcon" style="font-size:0.75rem;color:#94a3b8;">▼</span>
-            </button>
-
-            <div id="providerSectionBody" style="display:none;margin-top:10px;">
-                <div class="prompt-mode-group" style="margin-bottom:12px;">
-                    <button type="button" class="platform-mode-btn active" data-provider="gemini" onclick="selectApiProvider(this)">
-                        <span class="mode-icon">💎</span>
-                        Gemini
-                        <span class="mode-label">Direct API</span>
-                    </button>
-                    <button type="button" class="platform-mode-btn" data-provider="openai" onclick="selectApiProvider(this)">
-                        <span class="mode-icon">🧠</span>
-                        OpenAI
-                        <span class="mode-label">Chat API</span>
-                    </button>
-                </div>
-
-                <div style="background:linear-gradient(180deg, rgba(17,24,39,0.9), rgba(10,14,32,0.96));border:1px solid rgba(99,102,241,0.2);border-radius:14px;padding:12px;box-shadow:0 8px 24px rgba(0,0,0,0.22);">
-                    <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
-                        <span id="apiKeyLabel" style="font-size:0.75rem;color:#94a3b8;">🔑 Gemini API Key</span>
-                        <a id="apiKeyLink" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="font-size:0.65rem;color:#6366f1;text-decoration:none;border:1px solid rgba(99,102,241,0.3);padding:2px 6px;border-radius:4px;">สร้างฟรี</a>
-                        <span id="apiKeySavedBadge" style="display:none;font-size:0.62rem;color:#10b981;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.22);padding:2px 8px;border-radius:999px;">บันทึกในเครื่องแล้ว</span>
-                    </div>
-                    <div style="position:relative;">
-                        <input type="password" id="userApiKey" placeholder="วาง Gemini API Key ของคุณ" style="width:100%;box-sizing:border-box;background:rgba(15,23,42,0.6);border:1px solid rgba(99,102,241,0.2);border-radius:10px;padding:10px 42px 10px 12px;color:#e2e8f0;font-size:0.8rem;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='rgba(99,102,241,0.2)'" oninput="handleApiKeyInput(this.value)">
-                        <button type="button" id="toggleApiKeyBtn" onclick="toggleApiKeyVisibility()" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:#fbbf24;cursor:pointer;font-size:0.95rem;">👁️</button>
-                    </div>
-                    <div style="display:flex;gap:8px;margin-top:8px;">
-                        <button type="button" onclick="connectSelectedApiKey()" style="flex:1;background:linear-gradient(135deg,#22c55e,#16a34a);border:1px solid rgba(34,197,94,0.25);color:#fff;font-size:0.75rem;padding:10px 12px;border-radius:8px;cursor:pointer;font-weight:700;">เชื่อมต่อ Key</button>
-                        <button type="button" onclick="testSelectedApiKey()" style="flex:1;background:rgba(15,118,110,0.18);border:1px solid rgba(45,212,191,0.22);color:#ccfbf1;font-size:0.75rem;padding:10px 12px;border-radius:8px;cursor:pointer;font-weight:700;">ทดสอบ Key</button>
-                        <button type="button" onclick="clearSelectedApiKey()" style="background:rgba(127,29,29,0.25);border:1px solid rgba(248,113,113,0.25);color:#fca5a5;font-size:0.75rem;padding:10px 12px;border-radius:8px;cursor:pointer;font-weight:700;">ลบ</button>
-                    </div>
-                    <div id="apiKeyStatus" style="font-size:0.64rem;color:#64748b;margin-top:6px;line-height:1.5;">ยังไม่ได้เชื่อมต่อ Gemini API Key • ระบบจะเก็บ Key ใน localStorage ของเครื่องนี้เท่านั้น</div>
-                    <div id="apiKeyHint" style="font-size:0.6rem;color:#64748b;margin-top:6px;line-height:1.45;">ใส่ Gemini Key ส่วนตัวเพื่อไม่ต้องรอคิว • Key จะเก็บในเครื่องคุณเท่านั้น</div>
-                </div>
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+                <span style="font-size:0.75rem;color:#94a3b8;">🤖 AI Provider</span>
             </div>
+            <div class="prompt-mode-group">
+                <button type="button" class="platform-mode-btn active" data-provider="gemini" onclick="selectApiProvider(this)">
+                    <span class="mode-icon">💎</span>
+                    Gemini
+                    <span class="mode-label">Direct API</span>
+                </button>
+                <button type="button" class="platform-mode-btn" data-provider="openai" onclick="selectApiProvider(this)">
+                    <span class="mode-icon">🧠</span>
+                    OpenAI
+                    <span class="mode-label">Chat API</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- User API Key -->
+        <div style="margin-bottom:12px;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+                <span id="apiKeyLabel" style="font-size:0.75rem;color:#94a3b8;">🔑 Gemini API Key (ไม่บังคับ)</span>
+                <a id="apiKeyLink" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="font-size:0.65rem;color:#6366f1;text-decoration:none;border:1px solid rgba(99,102,241,0.3);padding:2px 6px;border-radius:4px;">สร้างฟรี</a>
+            </div>
+            <input type="password" id="userApiKey" placeholder="วาง API Key ของคุณที่นี่" style="width:100%;box-sizing:border-box;background:rgba(15,23,42,0.6);border:1px solid rgba(99,102,241,0.2);border-radius:8px;padding:8px 12px;color:#e2e8f0;font-size:0.8rem;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='rgba(99,102,241,0.2)'" oninput="handleApiKeyInput(this.value)">
+            <div id="apiKeyHint" style="font-size:0.6rem;color:#64748b;margin-top:4px;">ใส่ Key ส่วนตัวเพื่อไม่ต้องรอคิว • Key จะเก็บในเครื่องคุณเท่านั้น</div>
         </div>
 
         <!-- Generate -->
@@ -2833,12 +2817,12 @@ function initializeScenesContainer(obj, styleNames, mood) {
     container.innerHTML = `
         <div class="storyboard-header">
             <div class="storyboard-title">
-                <h2>💎 <span>${esc(obj)}</span> — Full Storyboard by Gemini</h2>
+                <h2>${esc(obj)} — Full Storyboard by ${esc(getProviderLabel())}</h2>
             </div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
                 <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#4f46e5);">${esc(styleNames)}</span>
                 <span class="style-badge" style="background:linear-gradient(135deg,#10b981,#059669);">${esc(mood)}</span>
-                <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#818cf8);">💎 Gemini AI</span>
+                <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#818cf8);">${esc(getProviderLabel())}</span>
                 <button class="copy-btn" style="font-size:0.7rem;padding:5px 12px;" onclick="copyGeminiAll()">📋 Copy All</button>
             </div>
         </div>
@@ -4763,17 +4747,12 @@ function generateSessionId() {
     return 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
 }
 
-// ===== USER API KEY / PROVIDER (เก็บไว้ในเครื่องผู้ใช้ด้วย localStorage) =====
+// ===== USER API KEY / PROVIDER =====
 const USER_API_PROVIDER_STORAGE = 'userApiProvider';
 const USER_GEMINI_API_KEY_STORAGE = 'userGeminiApiKey';
 const USER_OPENAI_API_KEY_STORAGE = 'userOpenAIApiKey';
-let selectedApiProvider = localStorage.getItem(USER_API_PROVIDER_STORAGE) || 'gemini';
 
-function maskApiKey(key) {
-    if (!key) return 'ยังไม่ได้เชื่อมต่อ';
-    if (key.length <= 10) return key;
-    return `${key.slice(0, 6)}••••••${key.slice(-4)}`;
-}
+let selectedApiProvider = localStorage.getItem(USER_API_PROVIDER_STORAGE) || 'gemini';
 
 function saveApiProvider(provider) {
     selectedApiProvider = provider === 'openai' ? 'openai' : 'gemini';
@@ -4785,9 +4764,11 @@ function getApiProvider() {
 }
 
 function saveUserGeminiApiKey(key) {
-    const cleanKey = (key || '').trim();
-    if (cleanKey) localStorage.setItem(USER_GEMINI_API_KEY_STORAGE, cleanKey);
-    else localStorage.removeItem(USER_GEMINI_API_KEY_STORAGE);
+    if (key && key.trim()) {
+        localStorage.setItem(USER_GEMINI_API_KEY_STORAGE, key.trim());
+    } else {
+        localStorage.removeItem(USER_GEMINI_API_KEY_STORAGE);
+    }
 }
 
 function getUserGeminiApiKey() {
@@ -4795,304 +4776,223 @@ function getUserGeminiApiKey() {
 }
 
 function saveUserOpenAIApiKey(key) {
-    const cleanKey = (key || '').trim();
-    if (cleanKey) localStorage.setItem(USER_OPENAI_API_KEY_STORAGE, cleanKey);
-    else localStorage.removeItem(USER_OPENAI_API_KEY_STORAGE);
+    if (key && key.trim()) {
+        localStorage.setItem(USER_OPENAI_API_KEY_STORAGE, key.trim());
+    } else {
+        localStorage.removeItem(USER_OPENAI_API_KEY_STORAGE);
+    }
 }
 
 function getUserOpenAIApiKey() {
     return localStorage.getItem(USER_OPENAI_API_KEY_STORAGE) || '';
 }
 
-function setApiKeyStatus(message, type = 'idle') {
-    const el = document.getElementById('apiKeyStatus');
-    if (!el) return;
-    const colorMap = { idle: '#64748b', success: '#10b981', error: '#f87171', loading: '#fbbf24' };
-    el.style.color = colorMap[type] || colorMap.idle;
-    el.textContent = message;
-}
-
 function saveUserApiKey(key) {
     handleApiKeyInput(key);
-    refreshApiKeyUI();
 }
 
 function getUserApiKey() {
-    return getApiProvider() === 'openai' ? getUserOpenAIApiKey() : getUserGeminiApiKey();
+    return getActiveApiKey();
 }
 
 function getActiveApiKey() {
-    return getUserApiKey();
+    return getApiProvider() === 'openai'
+        ? getUserOpenAIApiKey()
+        : getUserGeminiApiKey();
 }
 
-function getProviderDisplayName() {
-    return getApiProvider() === 'openai' ? 'OpenAI' : 'Gemini';
-}
-
-function toggleProviderSection(forceExpand = null) {
-    const body = document.getElementById('providerSectionBody');
-    const icon = document.getElementById('providerCollapseIcon');
-    if (!body || !icon) return;
-    const shouldExpand = forceExpand === null ? body.style.display === 'none' : !!forceExpand;
-    body.style.display = shouldExpand ? 'block' : 'none';
-    icon.textContent = shouldExpand ? '▲' : '▼';
+function handleApiKeyInput(value) {
+    if (getApiProvider() === 'openai') {
+        saveUserOpenAIApiKey(value);
+    } else {
+        saveUserGeminiApiKey(value);
+    }
 }
 
 function selectApiProvider(btn) {
     document.querySelectorAll('[data-provider]').forEach(el => el.classList.remove('active'));
     btn.classList.add('active');
     saveApiProvider(btn.dataset.provider);
-    refreshApiKeyUI();
+    refreshProviderUI();
 }
 
-function handleApiKeyInput(value) {
-    const clean = (value || '').trim();
-    if (getApiProvider() === 'openai') saveUserOpenAIApiKey(clean);
-    else saveUserGeminiApiKey(clean);
-    setApiKeyStatus(`มีการแก้ไข ${getProviderDisplayName()} API Key ในช่องกรอก • กด "เชื่อมต่อ Key" หรือ "ทดสอบ Key" เพื่อยืนยัน`, 'loading');
-}
-
-function refreshApiKeyUI() {
+function refreshProviderUI() {
     const provider = getApiProvider();
-    const savedKey = getUserApiKey();
     const input = document.getElementById('userApiKey');
-    const badge = document.getElementById('apiKeySavedBadge');
     const label = document.getElementById('apiKeyLabel');
     const hint = document.getElementById('apiKeyHint');
     const link = document.getElementById('apiKeyLink');
 
-    if (label && link && hint) {
-        if (provider === 'openai') {
-            label.textContent = '🧠 OpenAI API Key';
-            link.href = 'https://platform.openai.com/api-keys';
-            link.textContent = 'สร้างคีย์';
-            hint.textContent = 'ใส่ OpenAI Key ส่วนตัว • Key จะเก็บในเครื่องคุณเท่านั้น';
-        } else {
-            label.textContent = '🔑 Gemini API Key';
-            link.href = 'https://aistudio.google.com/apikey';
-            link.textContent = 'สร้างฟรี';
-            hint.textContent = 'ใส่ Gemini Key ส่วนตัวเพื่อไม่ต้องรอคิว • Key จะเก็บในเครื่องคุณเท่านั้น';
-        }
-    }
+    if (!input || !label || !hint || !link) return;
 
-    if (input) {
-        if (document.activeElement !== input) input.value = savedKey;
-        input.placeholder = provider === 'openai' ? 'วาง OpenAI API Key ของคุณ' : 'วาง Gemini API Key ของคุณ';
+    if (provider === 'openai') {
+        label.textContent = '🧠 OpenAI API Key (ไม่บังคับ)';
+        input.placeholder = 'วาง OpenAI API Key ของคุณที่นี่';
+        input.value = getUserOpenAIApiKey();
+        hint.textContent = 'ใส่ OpenAI Key ส่วนตัว • Key จะเก็บในเครื่องคุณเท่านั้น';
+        link.href = 'https://platform.openai.com/api-keys';
+        link.textContent = 'สร้างคีย์';
+    } else {
+        label.textContent = '🔑 Gemini API Key (ไม่บังคับ)';
+        input.placeholder = 'วาง Gemini API Key ของคุณที่นี่';
+        input.value = getUserGeminiApiKey();
+        hint.textContent = 'ใส่ Gemini Key ส่วนตัวเพื่อไม่ต้องรอคิว • Key จะเก็บในเครื่องคุณเท่านั้น';
+        link.href = 'https://aistudio.google.com/apikey';
+        link.textContent = 'สร้างฟรี';
     }
-
-    if (badge) badge.style.display = savedKey ? 'inline-block' : 'none';
 
     document.querySelectorAll('[data-provider]').forEach(el => {
         el.classList.toggle('active', el.dataset.provider === provider);
     });
-
-    setApiKeyStatus(
-        savedKey
-            ? `เชื่อมต่อแล้ว (${getProviderDisplayName()}): ${maskApiKey(savedKey)} • Key นี้ถูกเก็บในเครื่องเบราว์เซอร์นี้เท่านั้น`
-            : `ยังไม่ได้เชื่อมต่อ ${getProviderDisplayName()} API Key • ระบบจะเก็บ Key ใน localStorage ของเครื่องนี้เท่านั้น`,
-        savedKey ? 'success' : 'idle'
-    );
 }
 
-function connectSelectedApiKey() {
-    const input = document.getElementById('userApiKey');
-    const key = (input?.value || '').trim();
-    if (!key) {
-        setApiKeyStatus(`กรุณาวาง ${getProviderDisplayName()} API Key ก่อนเชื่อมต่อ`, 'error');
-        if (input) input.focus();
-        return;
-    }
-    if (getApiProvider() === 'openai') saveUserOpenAIApiKey(key);
-    else saveUserGeminiApiKey(key);
-    refreshApiKeyUI();
-    setApiKeyStatus(`บันทึก ${getProviderDisplayName()} API Key แล้ว: ${maskApiKey(key)}`, 'success');
+function getProviderLabel() {
+    return getApiProvider() === 'openai' ? '🧠 OpenAI' : '💎 Gemini AI';
 }
 
-function clearSelectedApiKey() {
-    if (getApiProvider() === 'openai') localStorage.removeItem(USER_OPENAI_API_KEY_STORAGE);
-    else localStorage.removeItem(USER_GEMINI_API_KEY_STORAGE);
-    const input = document.getElementById('userApiKey');
-    if (input) input.value = '';
-    refreshApiKeyUI();
-    setApiKeyStatus(`ลบ ${getProviderDisplayName()} API Key ออกจากเครื่องนี้แล้ว`, 'idle');
-}
-
-function connectGeminiApiKey() { connectSelectedApiKey(); }
-function clearUserApiKey() { clearSelectedApiKey(); }
-
-function toggleApiKeyVisibility() {
-    const input = document.getElementById('userApiKey');
-    const btn = document.getElementById('toggleApiKeyBtn');
-    if (!input || !btn) return;
-    const isPassword = input.type === 'password';
-    input.type = isPassword ? 'text' : 'password';
-    btn.textContent = isPassword ? '🙈' : '👁️';
-}
-
-async function testSelectedApiKey() {
-    const key = (document.getElementById('userApiKey')?.value || getUserApiKey()).trim();
-    if (!key) {
-        setApiKeyStatus('ยังไม่มี Key สำหรับทดสอบ', 'error');
-        return;
-    }
-    const provider = getApiProvider();
-    setApiKeyStatus(`กำลังทดสอบ ${getProviderDisplayName()} API Key...`, 'loading');
-    try {
-        if (provider === 'openai') {
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${key}`
-                },
-                body: JSON.stringify({
-                    model: 'gpt-4o-mini',
-                    messages: [
-                        { role: 'system', content: 'Reply with OK only.' },
-                        { role: 'user', content: 'OK' }
-                    ],
-                    temperature: 0,
-                    max_tokens: 5
-                })
-            });
-            const data = await response.json().catch(() => ({}));
-            if (!response.ok) throw new Error(data.error?.message || `OpenAI API Error ${response.status}`);
-            saveUserOpenAIApiKey(key);
-        } else {
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ role: 'user', parts: [{ text: 'ตอบกลับคำว่า OK เท่านั้น' }] }],
-                    generationConfig: { temperature: 0, maxOutputTokens: 8 }
-                })
-            });
-            const data = await response.json().catch(() => ({}));
-            if (!response.ok) throw new Error(data.error?.message || `Gemini API Error ${response.status}`);
-            saveUserGeminiApiKey(key);
-        }
-        refreshApiKeyUI();
-        setApiKeyStatus(`ทดสอบสำเร็จ • พร้อมใช้งาน (${getProviderDisplayName()}): ${maskApiKey(key)}`, 'success');
-    } catch (err) {
-        setApiKeyStatus(`ทดสอบไม่ผ่าน: ${err.message}`, 'error');
-    }
-}
-
-async function testGeminiApiKey() { return await testSelectedApiKey(); }
-
-// โหลด user/provider key จาก localStorage เมื่อเปิดหน้าเว็บ
+// โหลด provider + key จาก localStorage เมื่อเปิดหน้าเว็บ
 document.addEventListener('DOMContentLoaded', () => {
-    const input = document.getElementById('userApiKey');
-    if (input) {
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                connectSelectedApiKey();
+    refreshProviderUI();
+});
+
+// ===== DIRECT GEMINI API (ไม่ผ่าน Cloud Functions — ใช้ prompt เต็มจาก prompts-client.js) =====
+const GEMINI_API_KEY = 'AIzaSyARSj0cAw4At9k1AzIsXX3e41ZTsEEPLSw';
+
+const OPENAI_API_BASE = 'https://api.openai.com/v1/chat/completions';
+const OPENAI_MODEL = 'gpt-4.1';
+
+async function callUnifiedAI(settings) {
+    const provider = getApiProvider();
+    if (provider === 'openai') {
+        return await callOpenAIDirect(settings);
+    }
+    return await callGeminiDirect(settings);
+}
+
+function buildOpenAISystemPrompt(settings) {
+    const basePrompt = buildGeminiSystemPrompt(
+        settings.sceneCount,
+        settings.sceneNums,
+        settings.hasImage,
+        settings.promptMode,
+        settings.stylePersonalities,
+        settings.visualStylePrompt,
+        settings.platformMode,
+        settings.includeTextOverlay,
+        settings.glassSkin
+    );
+
+    return `${basePrompt}
+
+OUTPUT FORMAT (STRICT):
+- ตอบเป็น plain text เท่านั้น
+- ต้องมี Scene ครบทุกซีนตามจำนวนที่ขอ
+- แต่ละ Scene ต้องมีหัวข้อเหล่านี้:
+  Scene X:
+  Speaker:
+  Dialogue:
+  Action:
+  Image Prompt:
+  Video Prompt:
+- ห้ามอธิบายนอก format
+- ห้ามส่ง DIRECTOR'S TIPS
+- ห้ามส่งคำแนะนำเพิ่มเติม
+- ถ้าผู้ใช้ขอ caption/hashtags ให้ใช้ marker นี้เท่านั้น:
+---CAPTION_START---
+...
+---CAPTION_END---
+---HASHTAG_START---
+...
+---HASHTAG_END---
+- Output ต้องจบที่ Scene สุดท้ายเท่านั้น`;
+}
+
+async function callOpenAIDirect(settings) {
+    const apiKey = settings.userApiKey || getUserOpenAIApiKey();
+    if (!apiKey) {
+        throw new Error('ยังไม่ได้ใส่ OpenAI API Key');
+    }
+
+    const systemInstruction = buildOpenAISystemPrompt(settings);
+
+    const userContent = [];
+    userContent.push({
+        type: 'text',
+        text: settings.userInput || 'สร้าง storyboard ตามค่าที่กำหนด'
+    });
+
+    if (settings.productImageBase64) {
+        userContent.push({
+            type: 'image_url',
+            image_url: {
+                url: `data:${settings.productImageMimeType || 'image/jpeg'};base64,${settings.productImageBase64}`
             }
         });
     }
-    toggleProviderSection(false);
-    refreshApiKeyUI();
-});
 
-// ===== DIRECT GEMINI API (ใช้เฉพาะ Key ที่ผู้ใช้บันทึกไว้ในเครื่อง) =====
+    if (settings.characterImageBase64) {
+        userContent.push({
+            type: 'image_url',
+            image_url: {
+                url: `data:${settings.characterImageMimeType || 'image/jpeg'};base64,${settings.characterImageBase64}`
+            }
+        });
+    }
 
-function buildGeminiSystemPrompt(sceneCount, sceneNums, hasImage, promptMode, stylePersonalities, visualStylePrompt, platformMode, includeTextOverlay, glassSkin) {
-    const sceneList = Array.isArray(sceneNums) && sceneNums.length ? sceneNums.join(', ') : String(sceneCount || '');
-    const sceneCountSafe = Array.isArray(sceneNums) && sceneNums.length ? sceneNums.length : Number(sceneCount || 1);
-    const isReviewMode = promptMode === 'review';
-    const platformLabel = platformMode === 'supergrok'
-        ? 'Super Grok'
-        : (platformMode === 'grok' ? 'Grok' : 'Flow');
-    const durationGuide = platformMode === 'supergrok'
-        ? 'ต่อซีนประมาณ 10 วินาที / 30-40 คำ'
-        : (platformMode === 'grok' ? 'ต่อซีนประมาณ 6 วินาที / 15-20 คำ' : 'ต่อซีนประมาณ 8 วินาที / 20-30 คำ');
-    const overlayRule = includeTextOverlay
-        ? `TEXT OVERLAY บังคับ: แต่ละซีนสามารถมีข้อความสั้นแบบ H1/H2 ภาษาไทยได้เมื่อเหมาะสม โดยต้องสั้น อ่านง่าย กระแทกตา และสัมพันธ์กับซีน แต่ห้ามยาวเกินจำเป็น`
-        : `NO TEXT IN IMAGE: ห้ามมีข้อความบนภาพ ห้าม title card ห้าม subtitle ห้าม UI text ห้ามตัวอักษรลอยบนฉาก ยกเว้นข้อความที่ติดอยู่บนแพ็กเกจสินค้าจริง`;
-    const glassSkinRule = glassSkin
-        ? 'ตัวละครผิวฉ่ำวาว สวยเนียน มี glow แบบ premium แต่ยังดูคมชัด'
-        : 'ผิวและวัสดุสมจริงตามสไตล์ที่เลือก โดยไม่บังคับ glass skin';
-    const imageRefRule = hasImage
-        ? 'มีรูปอ้างอิงแนบมาแล้ว: ต้องยึดสินค้าหรือวัตถุจากรูปอ้างอิงเป็นหลัก ห้ามเปลี่ยนสี โลโก้ รูปร่าง แพ็กเกจ หรือจุดเด่นสำคัญ'
-        : 'ถ้าไม่มีรูปอ้างอิง ให้ตีความจากคำสั่งผู้ใช้แบบสมเหตุสมผลและคงความต่อเนื่องทุกซีน';
-    const modeBlock = isReviewMode
-        ? `คุณคือ UGC Product Review Director ระดับเทพสำหรับคอนเทนต์ขายของแนว TikTok/Short Video
-โฟกัส: คนจริงรีวิวสินค้า พูดไทยธรรมชาติ ขายเก่งแต่ไม่แข็ง`
-        : `คุณคือ Pixar / 3D Storyboard Director ระดับเทพสำหรับคอนเทนต์ไวรัล
-โฟกัส: เล่าเรื่องเป็นซีน ชัดเจน สนุก เข้าใจง่าย ดึงอารมณ์ และขายได้`;
-    const visualBlock = visualStylePrompt
-        ? `VISUAL STYLE LOCK:
-${visualStylePrompt}`
-        : 'VISUAL STYLE LOCK: เลือกภาพให้สวยระดับ cinematic, composition ชัด, subject เด่น, continuity ดี';
-    const personalityBlock = stylePersonalities && String(stylePersonalities).trim()
-        ? `NARRATIVE STYLE ที่ต้องผสม:
-${String(stylePersonalities).trim()}`
-        : 'NARRATIVE STYLE: เลือกน้ำเสียงและจังหวะเล่าเรื่องที่เหมาะกับโจทย์โดยอัตโนมัติ';
+    if (settings.characterImage2Base64) {
+        userContent.push({
+            type: 'image_url',
+            image_url: {
+                url: `data:${settings.characterImage2MimeType || 'image/jpeg'};base64,${settings.characterImage2Base64}`
+            }
+        });
+    }
 
-    return `${modeBlock}
+    if (settings.characterImage3Base64) {
+        userContent.push({
+            type: 'image_url',
+            image_url: {
+                url: `data:${settings.characterImage3MimeType || 'image/jpeg'};base64,${settings.characterImage3Base64}`
+            }
+        });
+    }
 
-งานของคุณคือสร้างผลลัพธ์ Storyboard แบบละเอียด จำนวน ${sceneCountSafe} ซีน (${sceneList}) สำหรับ ${platformLabel}
-GUIDE: ${durationGuide}
+    const requestBody = {
+        model: OPENAI_MODEL,
+        temperature: 1,
+        messages: [
+            { role: 'system', content: systemInstruction },
+            { role: 'user', content: userContent }
+        ]
+    };
 
-กฎหลัก:
-1. ต้องตอบให้ครบทุกซีน ห้ามข้าม ห้ามรวมซีน
-2. Dialogue ต้องเป็นภาษาไทย 100% ถ้า user ไม่ได้ขอภาษาอื่น
-3. แต่ละซีนต้องมี Speaker, Dialogue, Action, Image Prompt, Video Prompt
-4. Image Prompt และ Video Prompt ต้องเขียนเป็นภาษาอังกฤษเชิง production prompt พร้อมใช้งาน
-5. ทุกซีนต้องมี continuity ของตัวละคร โทนภาพ และเรื่องราว
-6. ${imageRefRule}
-7. ${overlayRule}
-8. ${glassSkinRule}
-9. ห้ามใช้ markdown table
-10. ห้ามอธิบายนอก format ที่กำหนด
+    const response = await fetch(OPENAI_API_BASE, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify(requestBody)
+    });
 
-${personalityBlock}
+    const data = await response.json();
 
-${visualBlock}
+    if (!response.ok) {
+        throw new Error(data.error?.message || `OpenAI API Error ${response.status}`);
+    }
 
-FORMAT บังคับที่ต้องตอบ:
-🎬 STORYBOARD OVERVIEW
-- Hook:
-- Core idea:
-- Visual direction:
-- Selling direction:
+    const resultText = data.choices?.[0]?.message?.content;
+    if (!resultText) {
+        throw new Error('ไม่ได้รับข้อมูลจาก OpenAI');
+    }
 
-FULL STORYBOARD
-
-===
-SCENE 1 : [ชื่อฉาก]
-(Picture Ref: [ถ้ามีใส่ชื่ออ้างอิงสั้นๆ ถ้าไม่มีเว้นเป็น -])
-Speaker: [ชื่อตัวละครหรือผู้พูด]
-Dialogue: "[บทพูดภาษาไทย]"
-Action: [อธิบายการกระทำ / สีหน้า / กล้อง]
-
-🔴 GEN IMAGE PROMPT
-[Image prompt ภาษาอังกฤษแบบพร้อมใช้]
-
-🟢 GEN VIDEO PROMPT
-[Video prompt ภาษาอังกฤษแบบพร้อมใช้]
-===
-
-ทำซ้ำรูปแบบนี้จนครบทุกซีนตามจำนวนที่กำหนด
-
-หลังซีนสุดท้ายให้ปิดท้ายด้วย:
----CAPTION_START---
-[caption ภาษาไทย 1 ชุด]
----CAPTION_END---
-
----HASHTAG_START---
-[hashtags 1 บรรทัด]
----HASHTAG_END---`;
+    console.log('[OpenAI] Success! Text length:', resultText.length);
+    return resultText;
 }
 
 
 async function callGeminiDirect(settings) {
-    const apiKey = getUserApiKey();
-    if (!apiKey) {
-        throw new Error('ยังไม่ได้เชื่อมต่อ Gemini API Key กรุณาวาง Key แล้วกด "เชื่อมต่อ Key" ก่อน');
-    }
+    const apiKey = settings.userApiKey || getUserGeminiApiKey() || GEMINI_API_KEY;
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
     
     console.log('[Direct] Calling Gemini API directly from client...', { includeTextOverlay: settings.includeTextOverlay, promptMode: settings.promptMode });
@@ -5183,17 +5083,13 @@ async function callGeminiDirect(settings) {
 }
 
 async function callGeminiViaCloud(settings) {
-    // เรียก Gemini API ตรงจาก client เป็นหลัก (ไม่ผ่าน Cloud Functions)
-    console.log('[Direct] Calling Gemini API directly...', { mode: settings.promptMode, platform: settings.platformMode, scenes: settings.sceneCount });
-    return await callGeminiDirect(settings);
+    // legacy alias
+    return await callUnifiedAI(settings);
 }
 
 // ===== FALLBACK: Direct Gemini Continue (เมื่อ Cloud Function 503) =====
 async function callGeminiContinueDirect(userInput, systemPrompt, clientChatHistory) {
-    const apiKey = getUserApiKey();
-    if (!apiKey) {
-        throw new Error('ยังไม่ได้เชื่อมต่อ Gemini API Key กรุณาวาง Key แล้วกด "เชื่อมต่อ Key" ก่อน');
-    }
+    const apiKey = getUserGeminiApiKey() || GEMINI_API_KEY;
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
     
     console.log('[Fallback] Calling Gemini Continue directly...');
@@ -5632,8 +5528,8 @@ async function generateGeminiStoryboard() {
     resetMultiTurnState();
 
     try {
-        showLoading('💎 กำลังส่งคำสั่งให้ Gemini AI...', `${obj} • ${modeLabel} • ${mood} • ${selectedSceneCount} ฉาก${hasImage ? ' • 📷 รูปสินค้า' : ''}`);
-        const rawText = await callGeminiViaCloud({
+        showLoading(`กำลังส่งคำสั่งให้ ${getProviderLabel()}...`, `${obj} • ${modeLabel} • ${mood} • ${selectedSceneCount} ฉาก${hasImage ? ' • 📷 รูปสินค้า' : ''}`);
+        const rawText = await callUnifiedAI({
             sceneCount: selectedSceneCount,
             sceneNums: sceneNums,
             hasImage: hasImage,
@@ -5652,7 +5548,8 @@ async function generateGeminiStoryboard() {
             characterImage2MimeType: characterImage2MimeType || undefined,
             characterImage3Base64: characterImage3Base64 || undefined,
             characterImage3MimeType: characterImage3MimeType || undefined,
-            userApiKey: getUserApiKey() || undefined,
+            userApiKey: getActiveApiKey() || undefined,
+            provider: getApiProvider(),
             sessionId: currentSessionId
         });
         hideLoading();
@@ -5693,12 +5590,12 @@ function renderGeminiResult(parsed, obj, styleNames, mood) {
     let html = `
         <div class="storyboard-header">
             <div class="storyboard-title">
-                <h2>💎 <span>${esc(obj)}</span> — Full Storyboard by Gemini</h2>
+                <h2>${esc(obj)} — Full Storyboard by ${esc(getProviderLabel())}</h2>
             </div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
                 <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#4f46e5);">${esc(styleNames)}</span>
                 <span class="style-badge" style="background:linear-gradient(135deg,#10b981,#059669);">${esc(mood)}</span>
-                <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#818cf8);">💎 Gemini AI</span>
+                <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#818cf8);">${esc(getProviderLabel())}</span>
                 <button class="copy-btn" style="font-size:0.7rem;padding:5px 12px;" onclick="copyGeminiAll()">📋 Copy All</button>
                 <button class="copy-btn" style="font-size:0.7rem;padding:5px 12px;background:linear-gradient(135deg,#10b981,#059669);" onclick="downloadPromptAsJSON()">📥 JSON</button>
             </div>
