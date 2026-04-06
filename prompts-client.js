@@ -555,3 +555,7 @@ Technical Settings:
 }
 
 // Client-side exports (global functions)
+
+window.buildGeminiSystemPrompt = buildGeminiSystemPrompt;
+window.buildPixar3dSystemPrompt = buildPixar3dSystemPrompt;
+window.buildReviewSystemPrompt = buildReviewSystemPrompt;

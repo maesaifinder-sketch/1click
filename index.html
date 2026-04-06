@@ -919,8 +919,6 @@
         
 
         
-
-        
     </style>
 </head>
 <body>
@@ -935,7 +933,7 @@
 
 <!-- Header -->
 <div class="header">
-    <img src="./logo.png" alt="Logo" class="header-logo">
+    <img src="/logo.png" alt="Logo" class="header-logo">
     <h1>1CLICK1STORY</h1>
     <div class="status-badge">🚀 GOD MODE ACTIVATED <span>(Powered by Viral Trends Mar 2026)</span></div>
     <p>for labs.google/flow — 8-Scene Storyboard + Prompt Generator</p>
@@ -1134,34 +1132,18 @@
             </label>
         </div>
 
-        <!-- AI Provider -->
-        <div style="margin-bottom:12px;">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-                <span style="font-size:0.75rem;color:#94a3b8;">🤖 AI Provider</span>
-            </div>
-            <div class="prompt-mode-group">
-                <button type="button" class="platform-mode-btn active" data-provider="gemini" onclick="selectApiProvider(this)">
-                    <span class="mode-icon">💎</span>
-                    Gemini
-                    <span class="mode-label">Direct API</span>
-                </button>
-                <button type="button" class="platform-mode-btn" data-provider="openai" onclick="selectApiProvider(this)">
-                    <span class="mode-icon">🧠</span>
-                    OpenAI
-                    <span class="mode-label">Chat API</span>
-                </button>
-            </div>
-        </div>
-
         <!-- User API Key -->
         <div style="margin-bottom:12px;">
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-                <span id="apiKeyLabel" style="font-size:0.75rem;color:#94a3b8;">🔑 Gemini API Key (ไม่บังคับ)</span>
-                <a id="apiKeyLink" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="font-size:0.65rem;color:#6366f1;text-decoration:none;border:1px solid rgba(99,102,241,0.3);padding:2px 6px;border-radius:4px;">สร้างฟรี</a>
+                <span style="font-size:0.75rem;color:#94a3b8;">🔑 Gemini API Key (ไม่บังคับ)</span>
+                <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="font-size:0.65rem;color:#6366f1;text-decoration:none;border:1px solid rgba(99,102,241,0.3);padding:2px 6px;border-radius:4px;">สร้างฟรี</a>
             </div>
-            <input type="password" id="userApiKey" placeholder="วาง API Key ของคุณที่นี่" style="width:100%;box-sizing:border-box;background:rgba(15,23,42,0.6);border:1px solid rgba(99,102,241,0.2);border-radius:8px;padding:8px 12px;color:#e2e8f0;font-size:0.8rem;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='rgba(99,102,241,0.2)'" oninput="handleApiKeyInput(this.value)">
-            <div id="apiKeyHint" style="font-size:0.6rem;color:#64748b;margin-top:4px;">ใส่ Key ส่วนตัวเพื่อไม่ต้องรอคิว • Key จะเก็บในเครื่องคุณเท่านั้น</div>
-            <div id="geminiNativeModeBadge" style="margin-top:8px;display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.28);color:#6ee7b7;font-size:0.62rem;font-weight:700;letter-spacing:0.2px;">⚡ Gemini Native Full-Engine Mode</div>
+            <input type="password" id="userApiKey" placeholder="วาง API Key ของคุณที่นี่ (ถ้ามี)" style="width:100%;box-sizing:border-box;background:rgba(15,23,42,0.6);border:1px solid rgba(99,102,241,0.2);border-radius:8px;padding:8px 12px;color:#e2e8f0;font-size:0.8rem;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='rgba(99,102,241,0.2)'" oninput="saveUserApiKey(this.value)">
+            <div style="font-size:0.6rem;color:#64748b;margin-top:4px;">ใส่ Key ส่วนตัวเพื่อไม่ต้องรอคิว • Key จะเก็บในเครื่องคุณเท่านั้น</div>
+        </div>
+
+        <div id="geminiNativeStatus" style="margin-bottom:12px;padding:10px 12px;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.18);border-radius:10px;font-size:0.72rem;line-height:1.5;color:#c7d2fe;">
+            ⚡ Gemini Native Full-Engine Mode พร้อมใช้งาน
         </div>
 
         <!-- Generate -->
@@ -2218,14 +2200,6 @@
 
 <script src="prompts-client.js?v=20260311b"></script>
 <script>
-const PROMPTS_CLIENT_ENGINE = {
-    buildGeminiSystemPrompt: typeof window.buildGeminiSystemPrompt === 'function' ? window.buildGeminiSystemPrompt.bind(window) : null,
-    buildPixar3dSystemPrompt: typeof window.buildPixar3dSystemPrompt === 'function' ? window.buildPixar3dSystemPrompt.bind(window) : null,
-    buildReviewSystemPrompt: typeof window.buildReviewSystemPrompt === 'function' ? window.buildReviewSystemPrompt.bind(window) : null
-};
-window.__lastGeminiFinishReason = '';
-window.__lastGeminiResponseMeta = null;
-
 // ===== DATA =====
 const narrativeStyles = [
     { num: 0, name: "ไม่เลือก", icon: "⚪", desc: "ไม่ระบุ Narrative Style", personality: '' },
@@ -2402,6 +2376,12 @@ let persistentSystemPrompt = '';
 // AI-generated Caption & Hashtags
 let generatedCaption = '';
 let generatedHashtags = '';
+
+// Gemini Native Full-Engine state
+let geminiNativeMeta = null;
+let geminiNativeFinishReason = '';
+let geminiNativeRoundCount = 0;
+let geminiNativeLastResponses = [];
 
 // Current Batch Info: ติดตามว่ากำลังเจน Batch ไหน (1-10, 11-20, 21-30, 31-40)
 let currentBatchNumber = 1;
@@ -2826,12 +2806,13 @@ function initializeScenesContainer(obj, styleNames, mood) {
     container.innerHTML = `
         <div class="storyboard-header">
             <div class="storyboard-title">
-                <h2>${esc(obj)} — Full Storyboard by ${esc(getProviderLabel())}</h2>
+                <h2>💎 <span>${esc(obj)}</span> — Full Storyboard by Gemini</h2>
             </div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
                 <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#4f46e5);">${esc(styleNames)}</span>
                 <span class="style-badge" style="background:linear-gradient(135deg,#10b981,#059669);">${esc(mood)}</span>
-                <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#818cf8);">${esc(getProviderLabel())}</span>
+                <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#818cf8);">💎 Gemini Native Full-Engine</span>
+                <span class="style-badge" style="background:linear-gradient(135deg,#f59e0b,#d97706);">rounds: ${esc(String(geminiNativeRoundCount || 1))} • finish: ${esc(geminiNativeFinishReason || 'unknown')}</span>
                 <button class="copy-btn" style="font-size:0.7rem;padding:5px 12px;" onclick="copyGeminiAll()">📋 Copy All</button>
             </div>
         </div>
@@ -4756,366 +4737,271 @@ function generateSessionId() {
     return 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
 }
 
-// ===== USER API KEY / PROVIDER =====
-const USER_API_PROVIDER_STORAGE = 'userApiProvider';
-const USER_GEMINI_API_KEY_STORAGE = 'userGeminiApiKey';
-const USER_OPENAI_API_KEY_STORAGE = 'userOpenAIApiKey';
-
-let selectedApiProvider = localStorage.getItem(USER_API_PROVIDER_STORAGE) || 'gemini';
-
-function saveApiProvider(provider) {
-    selectedApiProvider = provider === 'openai' ? 'openai' : 'gemini';
-    localStorage.setItem(USER_API_PROVIDER_STORAGE, selectedApiProvider);
-}
-
-function getApiProvider() {
-    return localStorage.getItem(USER_API_PROVIDER_STORAGE) || selectedApiProvider || 'gemini';
-}
-
-function saveUserGeminiApiKey(key) {
-    if (key && key.trim()) {
-        localStorage.setItem(USER_GEMINI_API_KEY_STORAGE, key.trim());
-    } else {
-        localStorage.removeItem(USER_GEMINI_API_KEY_STORAGE);
-    }
-}
-
-function getUserGeminiApiKey() {
-    return localStorage.getItem(USER_GEMINI_API_KEY_STORAGE) || '';
-}
-
-function saveUserOpenAIApiKey(key) {
-    if (key && key.trim()) {
-        localStorage.setItem(USER_OPENAI_API_KEY_STORAGE, key.trim());
-    } else {
-        localStorage.removeItem(USER_OPENAI_API_KEY_STORAGE);
-    }
-}
-
-function getUserOpenAIApiKey() {
-    return localStorage.getItem(USER_OPENAI_API_KEY_STORAGE) || '';
-}
-
+// ===== USER API KEY (ใช้ key ส่วนตัวของ user — optional pass-through to server) =====
 function saveUserApiKey(key) {
-    handleApiKeyInput(key);
+    if (key && key.trim()) {
+        localStorage.setItem('userGeminiApiKey', key.trim());
+    } else {
+        localStorage.removeItem('userGeminiApiKey');
+    }
 }
 
 function getUserApiKey() {
-    return getActiveApiKey();
+    return localStorage.getItem('userGeminiApiKey') || '';
 }
 
 function getActiveApiKey() {
-    return getApiProvider() === 'openai'
-        ? getUserOpenAIApiKey()
-        : getUserGeminiApiKey();
+    return getUserApiKey();
 }
 
-function handleApiKeyInput(value) {
-    if (getApiProvider() === 'openai') {
-        saveUserOpenAIApiKey(value);
-    } else {
-        saveUserGeminiApiKey(value);
-    }
-}
-
-function selectApiProvider(btn) {
-    document.querySelectorAll('[data-provider]').forEach(el => el.classList.remove('active'));
-    btn.classList.add('active');
-    saveApiProvider(btn.dataset.provider);
-    refreshProviderUI();
-}
-
-function refreshProviderUI() {
-    const provider = getApiProvider();
-    const input = document.getElementById('userApiKey');
-    const label = document.getElementById('apiKeyLabel');
-    const hint = document.getElementById('apiKeyHint');
-    const link = document.getElementById('apiKeyLink');
-
-    if (!input || !label || !hint || !link) return;
-
-    if (provider === 'openai') {
-        label.textContent = '🧠 OpenAI API Key (ไม่บังคับ)';
-        input.placeholder = 'วาง OpenAI API Key ของคุณที่นี่';
-        input.value = getUserOpenAIApiKey();
-        hint.textContent = 'ใส่ OpenAI Key ส่วนตัว • Key จะเก็บในเครื่องคุณเท่านั้น';
-        link.href = 'https://platform.openai.com/api-keys';
-        link.textContent = 'สร้างคีย์';
-    } else {
-        label.textContent = '🔑 Gemini API Key (ไม่บังคับ)';
-        input.placeholder = 'วาง Gemini API Key ของคุณที่นี่';
-        input.value = getUserGeminiApiKey();
-        hint.textContent = 'ใส่ Gemini Key ส่วนตัวเพื่อไม่ต้องรอคิว • Key จะเก็บในเครื่องคุณเท่านั้น';
-        link.href = 'https://aistudio.google.com/apikey';
-        link.textContent = 'สร้างฟรี';
-    }
-
-    document.querySelectorAll('[data-provider]').forEach(el => {
-        el.classList.toggle('active', el.dataset.provider === provider);
-    });
-
-    const modeBadge = document.getElementById('geminiNativeModeBadge');
-    if (modeBadge) {
-        if (provider === 'gemini') {
-            const hasKey = !!getUserGeminiApiKey();
-            modeBadge.style.display = 'inline-flex';
-            modeBadge.style.opacity = hasKey ? '1' : '0.92';
-            modeBadge.textContent = hasKey ? '⚡ Gemini Native Full-Engine Mode • Connected' : '⚡ Gemini Native Full-Engine Mode';
-        } else {
-            modeBadge.style.display = 'none';
-        }
-    }
-}
-
-function getProviderLabel() {
-    return getApiProvider() === 'openai' ? '🧠 OpenAI' : '💎 Gemini AI';
-}
-
-// โหลด provider + key จาก localStorage เมื่อเปิดหน้าเว็บ
+// โหลด user key จาก localStorage เมื่อเปิดหน้าเว็บ
 document.addEventListener('DOMContentLoaded', () => {
-    refreshProviderUI();
+    const savedKey = getUserApiKey();
+    const input = document.getElementById('userApiKey');
+    if (input && savedKey) {
+        input.value = savedKey;
+    }
 });
 
 // ===== DIRECT GEMINI API (ไม่ผ่าน Cloud Functions — ใช้ prompt เต็มจาก prompts-client.js) =====
 const GEMINI_API_KEY = 'AIzaSyARSj0cAw4At9k1AzIsXX3e41ZTsEEPLSw';
+const GEMINI_NATIVE_MODEL = 'gemini-2.5-flash';
+const GEMINI_NATIVE_MAX_ROUNDS = 4;
 
-const OPENAI_API_BASE = 'https://api.openai.com/v1/chat/completions';
-const OPENAI_MODEL = 'gpt-4.1';
-
-async function callUnifiedAI(settings) {
-    const provider = getApiProvider();
-    if (provider === 'openai') {
-        return await callOpenAIDirect(settings);
-    }
-    return await callGeminiDirect(settings);
-}
-
-function buildOpenAISystemPrompt(settings) {
-    const basePrompt = buildGeminiSystemPrompt(
-        settings.sceneCount,
-        settings.sceneNums,
-        settings.hasImage,
-        settings.promptMode,
-        settings.stylePersonalities,
-        settings.visualStylePrompt,
-        settings.platformMode,
-        settings.includeTextOverlay,
-        settings.glassSkin
-    );
-
-    return `${basePrompt}
-
-OUTPUT FORMAT (STRICT):
-- ตอบเป็น plain text เท่านั้น
-- ต้องมี Scene ครบทุกซีนตามจำนวนที่ขอ
-- แต่ละ Scene ต้องมีหัวข้อเหล่านี้:
-  Scene X:
-  Speaker:
-  Dialogue:
-  Action:
-  Image Prompt:
-  Video Prompt:
-- ห้ามอธิบายนอก format
-- ห้ามส่ง DIRECTOR'S TIPS
-- ห้ามส่งคำแนะนำเพิ่มเติม
-- ถ้าผู้ใช้ขอ caption/hashtags ให้ใช้ marker นี้เท่านั้น:
----CAPTION_START---
-...
----CAPTION_END---
----HASHTAG_START---
-...
----HASHTAG_END---
-- Output ต้องจบที่ Scene สุดท้ายเท่านั้น`;
-}
-
-async function callOpenAIDirect(settings) {
-    const apiKey = settings.userApiKey || getUserOpenAIApiKey();
-    if (!apiKey) {
-        throw new Error('ยังไม่ได้ใส่ OpenAI API Key');
-    }
-
-    const systemInstruction = buildOpenAISystemPrompt(settings);
-
-    const userContent = [];
-    userContent.push({
-        type: 'text',
-        text: settings.userInput || 'สร้าง storyboard ตามค่าที่กำหนด'
-    });
-
-    if (settings.productImageBase64) {
-        userContent.push({
-            type: 'image_url',
-            image_url: {
-                url: `data:${settings.productImageMimeType || 'image/jpeg'};base64,${settings.productImageBase64}`
-            }
-        });
-    }
-
-    if (settings.characterImageBase64) {
-        userContent.push({
-            type: 'image_url',
-            image_url: {
-                url: `data:${settings.characterImageMimeType || 'image/jpeg'};base64,${settings.characterImageBase64}`
-            }
-        });
-    }
-
-    if (settings.characterImage2Base64) {
-        userContent.push({
-            type: 'image_url',
-            image_url: {
-                url: `data:${settings.characterImage2MimeType || 'image/jpeg'};base64,${settings.characterImage2Base64}`
-            }
-        });
-    }
-
-    if (settings.characterImage3Base64) {
-        userContent.push({
-            type: 'image_url',
-            image_url: {
-                url: `data:${settings.characterImage3MimeType || 'image/jpeg'};base64,${settings.characterImage3Base64}`
-            }
-        });
-    }
-
-    const requestBody = {
-        model: OPENAI_MODEL,
-        temperature: 1,
-        messages: [
-            { role: 'system', content: systemInstruction },
-            { role: 'user', content: userContent }
-        ]
-    };
-
-    const response = await fetch(OPENAI_API_BASE, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
+function updateGeminiNativeStatus(message, tone = 'info') {
+    const el = document.getElementById('geminiNativeStatus');
+    if (!el) return;
+    const tones = {
+        info: {
+            background: 'rgba(99,102,241,0.08)',
+            border: 'rgba(99,102,241,0.18)',
+            color: '#c7d2fe'
         },
-        body: JSON.stringify(requestBody)
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-        throw new Error(data.error?.message || `OpenAI API Error ${response.status}`);
-    }
-
-    const resultText = data.choices?.[0]?.message?.content;
-    if (!resultText) {
-        throw new Error('ไม่ได้รับข้อมูลจาก OpenAI');
-    }
-
-    console.log('[OpenAI] Success! Text length:', resultText.length);
-    return resultText;
+        success: {
+            background: 'rgba(16,185,129,0.10)',
+            border: 'rgba(16,185,129,0.22)',
+            color: '#bbf7d0'
+        },
+        warn: {
+            background: 'rgba(245,158,11,0.10)',
+            border: 'rgba(245,158,11,0.22)',
+            color: '#fde68a'
+        },
+        error: {
+            background: 'rgba(239,68,68,0.10)',
+            border: 'rgba(239,68,68,0.22)',
+            color: '#fecaca'
+        }
+    };
+    const cfg = tones[tone] || tones.info;
+    el.textContent = message;
+    el.style.background = cfg.background;
+    el.style.borderColor = cfg.border;
+    el.style.color = cfg.color;
 }
 
+function extractGeminiTextFromCandidate(candidate) {
+    const parts = candidate?.content?.parts || [];
+    return parts
+        .map(part => typeof part?.text === 'string' ? part.text : '')
+        .filter(Boolean)
+        .join('\n')
+        .trim();
+}
 
-async function callGeminiDirect(settings) {
-    const apiKey = settings.userApiKey || getUserGeminiApiKey() || GEMINI_API_KEY;
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
-    
-    console.log('[Direct] Calling Gemini API directly from client...', { includeTextOverlay: settings.includeTextOverlay, promptMode: settings.promptMode });
-    
-    // Build full system prompt จาก prompts-client.js (เหมือน server-side เป๊ะ!)
-    const buildFullPrompt = PROMPTS_CLIENT_ENGINE.buildGeminiSystemPrompt || window.buildGeminiSystemPrompt;
-    if (typeof buildFullPrompt !== 'function') {
-        throw new Error('prompts-client.js ยังไม่ถูกโหลดหรือ buildGeminiSystemPrompt ไม่พร้อมใช้งาน');
-    }
-    const systemInstruction = buildFullPrompt(
-        settings.sceneCount,
-        settings.sceneNums,
-        settings.hasImage,
-        settings.promptMode,
-        settings.stylePersonalities,
-        settings.visualStylePrompt,
-        settings.platformMode,
-        settings.includeTextOverlay,
-        settings.glassSkin
-    );
-    
-    // DEBUG: ตรวจสอบว่า prompt มี TEXT OVERLAY instruction หรือไม่
-    const hasTextOverlayInPrompt = systemInstruction.includes('TEXT OVERLAY');
-    const hasNoTextInPrompt = systemInstruction.includes('NO TEXT IN IMAGE');
-    const isReviewMode = systemInstruction.includes('UGC Product Review Director');
-    console.log('[DEBUG-TEXTOVERLAY]', { 
-        toggleValue: settings.includeTextOverlay, 
-        promptMode: settings.promptMode,
-        isReviewMode,
-        hasTextOverlayInPrompt, 
-        hasNoTextInPrompt,
-        promptFirst300: systemInstruction.substring(0, 300),
-        promptSearchOverlay: systemInstruction.includes('TEXT OVERLAY บังคับ') ? 'FOUND ✅' : 'NOT FOUND ❌',
-        promptSearchHeadline: systemInstruction.includes('bold Thai text headline') ? 'FOUND ✅' : 'NOT FOUND ❌'
+function extractGeminiResponseMeta(data, response, roundIndex) {
+    const candidate = data?.candidates?.[0] || null;
+    const usage = data?.usageMetadata || null;
+    const meta = {
+        roundIndex,
+        status: response.status,
+        modelVersion: data?.modelVersion || GEMINI_NATIVE_MODEL,
+        finishReason: candidate?.finishReason || '',
+        avgLogprobs: candidate?.avgLogprobs,
+        usageMetadata: usage,
+        promptTokenCount: usage?.promptTokenCount ?? null,
+        candidatesTokenCount: usage?.candidatesTokenCount ?? null,
+        totalTokenCount: usage?.totalTokenCount ?? null,
+        responseId: data?.responseId || null
+    };
+    return meta;
+}
+
+function dedupeScenesByNumber(scenes) {
+    const map = new Map();
+    (Array.isArray(scenes) ? scenes : []).forEach(scene => {
+        const num = Number(scene?.scene_number);
+        if (!Number.isFinite(num)) return;
+        map.set(num, scene);
     });
-    
-    // สร้าง parts array สำหรับ user message
-    const parts = [];
-    
-    // เพิ่มรูปภาพถ้ามี
-    if (settings.productImageBase64) {
-        parts.push({ inline_data: { mime_type: settings.productImageMimeType || 'image/jpeg', data: settings.productImageBase64 } });
-    }
-    if (settings.characterImageBase64) {
-        parts.push({ inline_data: { mime_type: settings.characterImageMimeType || 'image/jpeg', data: settings.characterImageBase64 } });
-    }
-    if (settings.characterImage2Base64) {
-        parts.push({ inline_data: { mime_type: settings.characterImage2MimeType || 'image/jpeg', data: settings.characterImage2Base64 } });
-    }
-    if (settings.characterImage3Base64) {
-        parts.push({ inline_data: { mime_type: settings.characterImage3MimeType || 'image/jpeg', data: settings.characterImage3Base64 } });
-    }
-    
-    // เพิ่มข้อความ user input
-    parts.push({ text: settings.userInput });
-    
+    return Array.from(map.entries())
+        .sort((a, b) => a[0] - b[0])
+        .map(([, scene]) => scene);
+}
+
+function buildAutoContinuePrompt(settings, parsedScenes, lastMeta) {
+    const existingScenes = dedupeScenesByNumber(parsedScenes || []);
+    const existingSceneNumbers = existingScenes.map(scene => scene.scene_number).filter(Number.isFinite);
+    const highestScene = existingSceneNumbers.length > 0 ? Math.max(...existingSceneNumbers) : 0;
+    const remaining = [];
+    for (let i = highestScene + 1; i <= settings.sceneCount; i++) remaining.push(i);
+    const summary = existingScenes.slice(-3).map(scene => {
+        return `Scene ${scene.scene_number}: ${scene.scene_name || '-'}\n- Speaker: ${scene.speaker || '-'}\n- Dialogue: ${(scene.dialogue || '-').replace(/\s+/g, ' ').slice(0, 180)}\n- Action: ${(scene.action || '-').replace(/\s+/g, ' ').slice(0, 160)}`;
+    }).join('\n\n');
+
+    return `ตอบต่อจากงานเดิมทันทีในโหมด Gemini Native Full-Engine Mode\n\nสถานะล่าสุด:\n- finishReason: ${lastMeta?.finishReason || 'unknown'}\n- สร้างได้แล้ว ${existingScenes.length} จาก ${settings.sceneCount} ฉาก\n- ฉากที่สร้างแล้ว: ${existingSceneNumbers.join(', ') || '-'}\n- ฉากที่ยังต้องสร้างต่อ: ${remaining.join(', ') || '-'}\n\nกฎบังคับ:\n1. ห้ามเขียนซ้ำฉากเดิมถ้าไม่จำเป็น\n2. ให้เริ่มที่ Scene ${highestScene + 1} และสร้างต่อจนถึง Scene ${settings.sceneCount}\n3. ต้องใช้ system prompt เดิมและเรื่องเดิม 100%\n4. ถ้ามี ---CAPTION_START--- หรือ ---HASHTAG_START--- แล้ว ให้ใส่เฉพาะตอนครบทุกฉากเท่านั้น\n5. ห้ามเกริ่นนำ ห้ามอธิบาย ให้ตอบเป็นผลลัพธ์ฉากต่อเนื่องทันที\n\nสรุปฉากล่าสุดเพื่อรักษาความต่อเนื่อง:\n${summary || '-'}\n\nเริ่มสร้างต่อทันทีตอนนี้`; 
+}
+
+async function callGeminiNativeRound(apiUrl, systemInstruction, contents, roundIndex) {
     const requestBody = {
         system_instruction: { parts: [{ text: systemInstruction }] },
-        contents: [{ role: 'user', parts: parts }],
+        contents,
         generationConfig: {
             temperature: 1.0,
             maxOutputTokens: 65536
         }
     };
-    
+
     const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody)
     });
-    
+
     const data = await response.json();
-    
     if (!response.ok) {
         throw new Error(data.error?.message || `Gemini API Error ${response.status}`);
     }
-    
-    const resultText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!resultText) {
+
+    const candidate = data?.candidates?.[0] || null;
+    const text = extractGeminiTextFromCandidate(candidate);
+    if (!text) {
         throw new Error('ไม่ได้รับข้อมูลจาก Gemini');
     }
-    
-    // เก็บ system prompt + chat history สำหรับ follow-up
+
+    const meta = extractGeminiResponseMeta(data, response, roundIndex);
+    return { text, meta, raw: data };
+}
+
+async function callGeminiDirect(settings) {
+    const apiKey = getUserApiKey() || GEMINI_API_KEY;
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_NATIVE_MODEL}:generateContent?key=${apiKey}`;
+
+    if (typeof buildGeminiSystemPrompt !== 'function') {
+        throw new Error('ไม่พบ buildGeminiSystemPrompt() จาก prompts-client.js');
+    }
+
+    const systemInstruction = buildGeminiSystemPrompt(
+        settings.sceneCount,
+        settings.sceneNums,
+        settings.hasImage,
+        settings.promptMode,
+        settings.stylePersonalities,
+        settings.visualStylePrompt,
+        settings.platformMode,
+        settings.includeTextOverlay,
+        settings.glassSkin
+    );
+
     persistentSystemPrompt = systemInstruction;
-    chatHistory = [
-        { role: 'user', parts: [{ text: settings.userInput }] },
-        { role: 'model', parts: [{ text: resultText }] }
-    ];
-    
-    console.log('[Direct] Success! Text length:', resultText.length);
-    return resultText;
+    geminiNativeMeta = null;
+    geminiNativeFinishReason = '';
+    geminiNativeRoundCount = 0;
+    geminiNativeLastResponses = [];
+
+    console.log('[Gemini Native] buildGeminiSystemPrompt()', {
+        sceneCount: settings.sceneCount,
+        promptMode: settings.promptMode,
+        platformMode: settings.platformMode,
+        includeTextOverlay: settings.includeTextOverlay,
+        glassSkin: settings.glassSkin,
+        systemPromptLength: systemInstruction.length
+    });
+
+    const initialParts = [];
+    if (settings.productImageBase64) {
+        initialParts.push({ inline_data: { mime_type: settings.productImageMimeType || 'image/jpeg', data: settings.productImageBase64 } });
+    }
+    if (settings.characterImageBase64) {
+        initialParts.push({ inline_data: { mime_type: settings.characterImageMimeType || 'image/jpeg', data: settings.characterImageBase64 } });
+    }
+    if (settings.characterImage2Base64) {
+        initialParts.push({ inline_data: { mime_type: settings.characterImage2MimeType || 'image/jpeg', data: settings.characterImage2Base64 } });
+    }
+    if (settings.characterImage3Base64) {
+        initialParts.push({ inline_data: { mime_type: settings.characterImage3MimeType || 'image/jpeg', data: settings.characterImage3Base64 } });
+    }
+    initialParts.push({ text: settings.userInput });
+
+    const contents = [{ role: 'user', parts: initialParts }];
+    const collectedTexts = [];
+    let combinedScenes = [];
+
+    updateGeminiNativeStatus('⚡ Gemini Native Full-Engine Mode กำลังทำงาน…', 'info');
+
+    for (let roundIndex = 1; roundIndex <= GEMINI_NATIVE_MAX_ROUNDS; roundIndex++) {
+        geminiNativeRoundCount = roundIndex;
+        updateGeminiNativeStatus(`⚡ Gemini Native Full-Engine Mode • รอบที่ ${roundIndex}`, 'info');
+
+        const roundResult = await callGeminiNativeRound(apiUrl, systemInstruction, contents, roundIndex);
+        const { text, meta } = roundResult;
+        geminiNativeMeta = meta;
+        geminiNativeFinishReason = meta.finishReason || '';
+        geminiNativeLastResponses.push({ meta, textLength: text.length });
+        collectedTexts.push(text);
+        contents.push({ role: 'model', parts: [{ text }] });
+
+        const combinedText = collectedTexts.join('\n\n');
+        const parsed = parseGeminiResponse(combinedText);
+        combinedScenes = dedupeScenesByNumber(parsed.scenes || []);
+
+        console.log('[Gemini Native] Round result', {
+            roundIndex,
+            finishReason: meta.finishReason,
+            textLength: text.length,
+            parsedScenes: combinedScenes.length,
+            totalTokenCount: meta.totalTokenCount
+        });
+
+        const isComplete = combinedScenes.length >= settings.sceneCount;
+        if (isComplete) {
+            updateGeminiNativeStatus(`✅ Gemini Native Full-Engine Mode สำเร็จครบ ${combinedScenes.length}/${settings.sceneCount} ฉาก`, 'success');
+            break;
+        }
+
+        const canContinue = roundIndex < GEMINI_NATIVE_MAX_ROUNDS;
+        if (!canContinue) {
+            updateGeminiNativeStatus(`⚠️ Gemini Native Full-Engine Mode ได้ ${combinedScenes.length}/${settings.sceneCount} ฉาก (finishReason: ${meta.finishReason || 'unknown'})`, 'warn');
+            break;
+        }
+
+        const continuePrompt = buildAutoContinuePrompt(settings, combinedScenes, meta);
+        contents.push({ role: 'user', parts: [{ text: continuePrompt }] });
+        updateGeminiNativeStatus(`⚠️ คำตอบยังไม่ครบ ${combinedScenes.length}/${settings.sceneCount} ฉาก • กำลัง auto-continue`, 'warn');
+    }
+
+    const finalText = collectedTexts.join('\n\n');
+    chatHistory = contents.slice(-CHAT_HISTORY_LIMIT);
+    console.log('[Gemini Native] Final summary', {
+        rounds: geminiNativeRoundCount,
+        finishReason: geminiNativeFinishReason,
+        scenes: combinedScenes.length,
+        requestedScenes: settings.sceneCount,
+        meta: geminiNativeMeta
+    });
+    return finalText;
 }
 
 async function callGeminiViaCloud(settings) {
-    // legacy alias
-    return await callUnifiedAI(settings);
+    // เรียก Gemini API ตรงจาก client เป็นหลัก (ไม่ผ่าน Cloud Functions)
+    console.log('[Direct] Calling Gemini API directly...', { mode: settings.promptMode, platform: settings.platformMode, scenes: settings.sceneCount });
+    return await callGeminiDirect(settings);
 }
 
 // ===== FALLBACK: Direct Gemini Continue (เมื่อ Cloud Function 503) =====
 async function callGeminiContinueDirect(userInput, systemPrompt, clientChatHistory) {
-    const apiKey = getUserGeminiApiKey() || GEMINI_API_KEY;
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+    const apiKey = getUserApiKey() || GEMINI_API_KEY;
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_NATIVE_MODEL}:generateContent?key=${apiKey}`;
     
     console.log('[Fallback] Calling Gemini Continue directly...');
     
@@ -5553,8 +5439,8 @@ async function generateGeminiStoryboard() {
     resetMultiTurnState();
 
     try {
-        showLoading(`กำลังส่งคำสั่งให้ ${getProviderLabel()}...`, `${obj} • ${modeLabel} • ${mood} • ${selectedSceneCount} ฉาก${hasImage ? ' • 📷 รูปสินค้า' : ''}`);
-        let rawText = await callUnifiedAI({
+        showLoading('💎 กำลังส่งคำสั่งให้ Gemini AI...', `${obj} • ${modeLabel} • ${mood} • ${selectedSceneCount} ฉาก${hasImage ? ' • 📷 รูปสินค้า' : ''}`);
+        const rawText = await callGeminiViaCloud({
             sceneCount: selectedSceneCount,
             sceneNums: sceneNums,
             hasImage: hasImage,
@@ -5573,33 +5459,15 @@ async function generateGeminiStoryboard() {
             characterImage2MimeType: characterImage2MimeType || undefined,
             characterImage3Base64: characterImage3Base64 || undefined,
             characterImage3MimeType: characterImage3MimeType || undefined,
-            userApiKey: getActiveApiKey() || undefined,
-            provider: getApiProvider(),
+            userApiKey: getUserApiKey() || undefined,
             sessionId: currentSessionId
         });
-
-        let parsed = parseGeminiResponse(rawText);
-
-        if (getApiProvider() === 'gemini') {
-            let continueGuard = 0;
-            while (parsed.scenes.length < selectedSceneCount && continueGuard < 6) {
-                continueGuard++;
-                showLoading('⚡ Gemini Native Full-Engine กำลังต่อ Prompt...', `ได้ ${parsed.scenes.length}/${selectedSceneCount} ฉาก • รอบที่ ${continueGuard}`);
-                const nextScene = parsed.scenes.length + 1;
-                const continuePrompt = `ต่อจาก Scene ${nextScene} เท่านั้น ห้ามเขียนซ้ำ Scene เดิม ห้ามเริ่มเรื่องใหม่ ห้ามย่อ ห้ามตัด ให้ส่งต่อจนถึง Scene ${selectedSceneCount} ตาม format เดิมทุกประการ`;
-                const cont = await callGeminiContinueDirect(continuePrompt, persistentSystemPrompt, chatHistory);
-                if (!cont || !cont.text || !cont.text.trim()) break;
-                rawText += `\n\n${cont.text}`;
-                chatHistory = cont.chatHistory || chatHistory;
-                parsed = parseGeminiResponse(rawText);
-                if (parsed.scenes.length >= selectedSceneCount) break;
-            }
-        }
-
         hideLoading();
 
         console.log('[generateGeminiStoryboard] Raw text length:', rawText.length);
         console.log('[generateGeminiStoryboard] Raw text preview:', rawText.substring(0, 500));
+
+        const parsed = parseGeminiResponse(rawText);
         
         // เก็บ Caption + Hashtags จาก AI
         if (parsed.caption) generatedCaption = parsed.caption;
@@ -5620,6 +5488,7 @@ async function generateGeminiStoryboard() {
         }
     } catch (err) {
         hideLoading();
+        updateGeminiNativeStatus('❌ Gemini Native Full-Engine Mode error: ' + err.message, 'error');
         alert('Gemini API Error: ' + err.message);
     }
 }
@@ -5632,12 +5501,12 @@ function renderGeminiResult(parsed, obj, styleNames, mood) {
     let html = `
         <div class="storyboard-header">
             <div class="storyboard-title">
-                <h2>${esc(obj)} — Full Storyboard by ${esc(getProviderLabel())}</h2>
+                <h2>💎 <span>${esc(obj)}</span> — Full Storyboard by Gemini</h2>
             </div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
                 <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#4f46e5);">${esc(styleNames)}</span>
                 <span class="style-badge" style="background:linear-gradient(135deg,#10b981,#059669);">${esc(mood)}</span>
-                <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#818cf8);">${esc(getProviderLabel())}</span>
+                <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#818cf8);">💎 Gemini AI</span>
                 <button class="copy-btn" style="font-size:0.7rem;padding:5px 12px;" onclick="copyGeminiAll()">📋 Copy All</button>
                 <button class="copy-btn" style="font-size:0.7rem;padding:5px 12px;background:linear-gradient(135deg,#10b981,#059669);" onclick="downloadPromptAsJSON()">📥 JSON</button>
             </div>
@@ -6230,8 +6099,9 @@ renderMoodGrid();
 renderVisualGrid();
 </script>
 
-
+<!-- Firebase SDK -->
 <script>
-// Login system removed: page is now open-access.
+// Login system removed: page opens directly without authentication.
+let currentUserRole = "guest";
 </script>
 </body></html>
