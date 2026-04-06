@@ -935,7 +935,7 @@
 
 <!-- Header -->
 <div class="header">
-    <img src="./logo.png" alt="Logo" class="header-logo">
+    <img src="/logo.png" alt="Logo" class="header-logo">
     <h1>1CLICK1STORY</h1>
     <div class="status-badge">🚀 GOD MODE ACTIVATED <span>(Powered by Viral Trends Mar 2026)</span></div>
     <p>for labs.google/flow — 8-Scene Storyboard + Prompt Generator</p>
@@ -1134,25 +1134,62 @@
             </label>
         </div>
 
-        <!-- User API Key -->
+                <!-- AI Provider -->
         <div style="margin-bottom:12px;">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap;">
-                <span style="font-size:0.75rem;color:#94a3b8;">🔑 Gemini API Key</span>
-                <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="font-size:0.65rem;color:#6366f1;text-decoration:none;border:1px solid rgba(99,102,241,0.3);padding:2px 6px;border-radius:4px;">สร้างฟรี</a>
-                <span id="apiKeySavedBadge" style="display:none;font-size:0.62rem;color:#10b981;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.22);padding:2px 8px;border-radius:999px;">บันทึกในเครื่องแล้ว</span>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:0.75rem;font-weight:700;color:#cbd5e1;">
+                <span>🤖</span><span>AI Provider</span>
             </div>
-            <div style="position:relative;">
-                <input type="password" id="userApiKey" placeholder="วาง Gemini API Key ของคุณ" style="width:100%;box-sizing:border-box;background:rgba(15,23,42,0.6);border:1px solid rgba(99,102,241,0.2);border-radius:8px;padding:8px 42px 8px 12px;color:#e2e8f0;font-size:0.8rem;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='rgba(99,102,241,0.2)'">
-                <button type="button" id="toggleApiKeyBtn" onclick="toggleApiKeyVisibility()" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:#94a3b8;cursor:pointer;font-size:0.95rem;">👁️</button>
+            <div class="prompt-mode-group" style="display:flex;">
+                <button type="button" class="platform-mode-btn active" data-provider="gemini" onclick="selectApiProvider(this)">
+                    <span class="mode-icon">💎</span>
+                    Gemini
+                    <span class="mode-label">Direct API</span>
+                </button>
+                <button type="button" class="platform-mode-btn" data-provider="openai" onclick="selectApiProvider(this)">
+                    <span class="mode-icon">🧠</span>
+                    OpenAI
+                    <span class="mode-label">Chat API</span>
+                </button>
             </div>
-            <div style="display:flex;gap:8px;margin-top:8px;">
-                <button type="button" onclick="connectGeminiApiKey()" style="flex:1;background:linear-gradient(135deg,#6366f1,#4f46e5);border:none;color:#fff;font-size:0.75rem;padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:600;">เชื่อมต่อ Key</button>
-                <button type="button" onclick="testGeminiApiKey()" style="flex:1;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);color:#c7d2fe;font-size:0.75rem;padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:600;">ทดสอบ Key</button>
-                <button type="button" onclick="clearUserApiKey()" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.25);color:#fca5a5;font-size:0.75rem;padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:600;">ลบ</button>
-            </div>
-            <div id="apiKeyStatus" style="font-size:0.64rem;color:#64748b;margin-top:6px;line-height:1.5;">ยังไม่ได้เชื่อมต่อ Gemini API Key • ระบบจะเก็บ Key ใน localStorage ของเครื่องนี้เท่านั้น</div>
         </div>
 
+        <!-- API Keys -->
+        <div style="margin-bottom:12px;">
+            <div id="geminiApiPanel">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap;">
+                    <span style="font-size:0.75rem;color:#94a3b8;">🔑 Gemini API Key</span>
+                    <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="font-size:0.65rem;color:#6366f1;text-decoration:none;border:1px solid rgba(99,102,241,0.3);padding:2px 6px;border-radius:4px;">สร้างฟรี</a>
+                    <span id="apiKeySavedBadge" style="display:none;font-size:0.62rem;color:#10b981;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.22);padding:2px 8px;border-radius:999px;">บันทึกในเครื่องแล้ว</span>
+                </div>
+                <div style="position:relative;">
+                    <input type="password" id="userApiKey" placeholder="วาง Gemini API Key ของคุณ" style="width:100%;box-sizing:border-box;background:rgba(15,23,42,0.6);border:1px solid rgba(99,102,241,0.2);border-radius:8px;padding:8px 42px 8px 12px;color:#e2e8f0;font-size:0.8rem;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='rgba(99,102,241,0.2)'">
+                    <button type="button" id="toggleApiKeyBtn" onclick="toggleApiKeyVisibility('userApiKey','toggleApiKeyBtn')" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:#94a3b8;cursor:pointer;font-size:0.95rem;">👁️</button>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:8px;">
+                    <button type="button" onclick="connectGeminiApiKey()" style="flex:1;background:linear-gradient(135deg,#6366f1,#4f46e5);border:none;color:#fff;font-size:0.75rem;padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:600;">เชื่อมต่อ Key</button>
+                    <button type="button" onclick="testGeminiApiKey()" style="flex:1;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);color:#c7d2fe;font-size:0.75rem;padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:600;">ทดสอบ Key</button>
+                    <button type="button" onclick="clearUserApiKey()" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.25);color:#fca5a5;font-size:0.75rem;padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:600;">ลบ</button>
+                </div>
+                <div id="apiKeyStatus" style="font-size:0.64rem;color:#64748b;margin-top:6px;line-height:1.5;">ยังไม่ได้เชื่อมต่อ Gemini API Key • ระบบจะเก็บ Key ใน localStorage ของเครื่องนี้เท่านั้น</div>
+            </div>
+            <div id="openaiApiPanel" style="display:none;margin-top:12px;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap;">
+                    <span style="font-size:0.75rem;color:#94a3b8;">🧠 OpenAI API Key</span>
+                    <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener" style="font-size:0.65rem;color:#10b981;text-decoration:none;border:1px solid rgba(16,185,129,0.3);padding:2px 6px;border-radius:4px;">สร้างคีย์</a>
+                    <span id="openaiApiKeySavedBadge" style="display:none;font-size:0.62rem;color:#10b981;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.22);padding:2px 8px;border-radius:999px;">บันทึกในเครื่องแล้ว</span>
+                </div>
+                <div style="position:relative;">
+                    <input type="password" id="userOpenAIApiKey" placeholder="วาง OpenAI API Key ของคุณ" style="width:100%;box-sizing:border-box;background:rgba(15,23,42,0.6);border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:8px 42px 8px 12px;color:#e2e8f0;font-size:0.8rem;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#10b981'" onblur="this.style.borderColor='rgba(16,185,129,0.2)'">
+                    <button type="button" id="toggleOpenAIApiKeyBtn" onclick="toggleApiKeyVisibility('userOpenAIApiKey','toggleOpenAIApiKeyBtn')" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:#94a3b8;cursor:pointer;font-size:0.95rem;">👁️</button>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:8px;">
+                    <button type="button" onclick="connectOpenAIApiKey()" style="flex:1;background:linear-gradient(135deg,#10b981,#059669);border:none;color:#fff;font-size:0.75rem;padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:600;">เชื่อมต่อ Key</button>
+                    <button type="button" onclick="testOpenAIApiKey()" style="flex:1;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:#a7f3d0;font-size:0.75rem;padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:600;">ทดสอบ Key</button>
+                    <button type="button" onclick="clearOpenAIApiKey()" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.25);color:#fca5a5;font-size:0.75rem;padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:600;">ลบ</button>
+                </div>
+                <div id="openaiApiKeyStatus" style="font-size:0.64rem;color:#64748b;margin-top:6px;line-height:1.5;">ยังไม่ได้เชื่อมต่อ OpenAI API Key • ระบบจะเก็บ Key ใน localStorage ของเครื่องนี้เท่านั้น</div>
+            </div>
+        </div>
         <!-- Generate -->
         <button class="generate-btn gemini-btn" onclick="generateGeminiStoryboard()">
             💎 1click1story — สร้าง Full Storyboard
@@ -2807,12 +2844,12 @@ function initializeScenesContainer(obj, styleNames, mood) {
     container.innerHTML = `
         <div class="storyboard-header">
             <div class="storyboard-title">
-                <h2>💎 <span>${esc(obj)}</span> — Full Storyboard by Gemini</h2>
+                <h2>${currentProvider === 'openai' ? '🧠' : '💎'} <span>${esc(obj)}</span> — Full Storyboard by ${currentProvider === 'openai' ? 'OpenAI' : 'Gemini'}</h2>
             </div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
                 <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#4f46e5);">${esc(styleNames)}</span>
                 <span class="style-badge" style="background:linear-gradient(135deg,#10b981,#059669);">${esc(mood)}</span>
-                <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#818cf8);">💎 Gemini AI</span>
+                <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#818cf8);">${currentProvider === 'openai' ? '🧠 OpenAI' : '💎 Gemini AI'}</span>
                 <button class="copy-btn" style="font-size:0.7rem;padding:5px 12px;" onclick="copyGeminiAll()">📋 Copy All</button>
             </div>
         </div>
@@ -4622,6 +4659,7 @@ function selectVisualStyle(id) {
         <span>${selectedVisualStyle.icon}</span> <span>${selectedVisualStyle.name}</span>
     `;
     renderVisualGrid();
+refreshProviderUI();
     setTimeout(() => closeModal('visualModal'), 200);
 }
 
@@ -4791,8 +4829,65 @@ function getUserApiKey() {
     return localStorage.getItem(USER_GEMINI_API_KEY_STORAGE) || '';
 }
 
+function getUserOpenAIApiKey() {
+    return localStorage.getItem('userOpenAIApiKey') || '';
+}
+
 function getActiveApiKey() {
-    return getUserApiKey();
+    return currentProvider === 'openai' ? getUserOpenAIApiKey() : getUserApiKey();
+}
+
+
+let currentProvider = localStorage.getItem('currentProvider') || 'gemini';
+function selectApiProvider(btn) {
+  const provider = btn?.dataset?.provider || 'gemini';
+  currentProvider = provider;
+  localStorage.setItem('currentProvider', provider);
+  refreshProviderUI();
+}
+function refreshProviderUI() {
+  const gem = document.getElementById('geminiApiPanel');
+  const oa = document.getElementById('openaiApiPanel');
+  if (gem) gem.style.display = currentProvider === 'gemini' ? '' : 'none';
+  if (oa) oa.style.display = currentProvider === 'openai' ? '' : 'none';
+  document.querySelectorAll('[data-provider]').forEach(el => el.classList.toggle('active', el.dataset.provider === currentProvider));
+  const gi = document.getElementById('userApiKey'); if (gi) gi.value = getUserApiKey();
+  const oi = document.getElementById('userOpenAIApiKey'); if (oi) oi.value = getUserOpenAIApiKey();
+  const btn = document.querySelector('.generate-btn');
+  if (btn) btn.innerHTML = `${currentProvider === 'openai' ? '🧠' : '💎'} 1click1story — สร้าง Full Storyboard`;
+}
+function setOpenAIApiKeyStatus(message, type = 'idle') {
+  const el = document.getElementById('openaiApiKeyStatus'); if (!el) return;
+  el.textContent = message;
+  const colors = {idle:'#64748b',success:'#10b981',error:'#f87171',loading:'#f59e0b'};
+  el.style.color = colors[type] || colors.idle;
+  const badge = document.getElementById('openaiApiKeySavedBadge');
+  if (badge) badge.style.display = (type === 'success' || getUserOpenAIApiKey()) ? 'inline-flex' : 'none';
+}
+function connectOpenAIApiKey() {
+  const input = document.getElementById('userOpenAIApiKey'); const key=(input?.value||'').trim();
+  if (!key) { setOpenAIApiKeyStatus('กรุณาวาง OpenAI API Key ก่อนเชื่อมต่อ','error'); if (input) input.focus(); return; }
+  localStorage.setItem('userOpenAIApiKey', key);
+  setOpenAIApiKeyStatus(`บันทึก OpenAI API Key แล้ว: ${maskApiKey(key)}`,'success');
+}
+function clearOpenAIApiKey() {
+  localStorage.removeItem('userOpenAIApiKey');
+  const input = document.getElementById('userOpenAIApiKey'); if (input) input.value='';
+  setOpenAIApiKeyStatus('ลบ OpenAI API Key ออกจากเครื่องนี้แล้ว','idle');
+}
+async function testOpenAIApiKey() {
+  const key=(document.getElementById('userOpenAIApiKey')?.value||getUserOpenAIApiKey()).trim();
+  if (!key) { setOpenAIApiKeyStatus('ยังไม่มี Key สำหรับทดสอบ','error'); return; }
+  setOpenAIApiKeyStatus('กำลังทดสอบ OpenAI API Key...','loading');
+  try {
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {method:'POST', headers:{'Content-Type':'application/json','Authorization':`Bearer ${key}`}, body: JSON.stringify({model:'gpt-4o', messages:[{role:'user', content:'Reply with OK only.'}], temperature:0, max_tokens:5})});
+    const data = await res.json().catch(()=>({}));
+    if (!res.ok) throw new Error(data.error?.message || `OpenAI API Error ${res.status}`);
+    localStorage.setItem('userOpenAIApiKey', key);
+    setOpenAIApiKeyStatus(`ทดสอบสำเร็จ: ${maskApiKey(key)}`,'success');
+  } catch (err) {
+    setOpenAIApiKeyStatus(`ทดสอบไม่ผ่าน: ${err.message}`,'error');
+  }
 }
 
 function connectGeminiApiKey() {
@@ -4815,9 +4910,9 @@ function clearUserApiKey() {
     setApiKeyStatus('ลบ Gemini API Key ออกจากเครื่องนี้แล้ว', 'idle');
 }
 
-function toggleApiKeyVisibility() {
-    const input = document.getElementById('userApiKey');
-    const btn = document.getElementById('toggleApiKeyBtn');
+function toggleApiKeyVisibility(inputId = 'userApiKey', btnId = 'toggleApiKeyBtn') {
+    const input = document.getElementById(inputId);
+    const btn = document.getElementById(btnId);
     if (!input || !btn) return;
     const isPassword = input.type === 'password';
     input.type = isPassword ? 'text' : 'password';
@@ -5507,8 +5602,8 @@ async function generateGeminiStoryboard() {
     resetMultiTurnState();
 
     try {
-        showLoading('💎 กำลังส่งคำสั่งให้ Gemini AI...', `${obj} • ${modeLabel} • ${mood} • ${selectedSceneCount} ฉาก${hasImage ? ' • 📷 รูปสินค้า' : ''}`);
-        const rawText = await callGeminiViaCloud({
+        showLoading(`${currentProvider === 'openai' ? '🧠' : '💎'} กำลังส่งคำสั่งให้ ${currentProvider === 'openai' ? 'OpenAI' : 'Gemini AI'}...`, `${obj} • ${modeLabel} • ${mood} • ${selectedSceneCount} ฉาก${hasImage ? ' • 📷 รูปสินค้า' : ''}`);
+        const rawText = await (currentProvider === 'openai' ? callOpenAI(getActiveApiKey(), obj, styleNames, mood, sceneNums) : callGeminiViaCloud({
             sceneCount: selectedSceneCount,
             sceneNums: sceneNums,
             hasImage: hasImage,
@@ -5529,7 +5624,7 @@ async function generateGeminiStoryboard() {
             characterImage3MimeType: characterImage3MimeType || undefined,
             userApiKey: getUserApiKey() || undefined,
             sessionId: currentSessionId
-        });
+        }));
         hideLoading();
 
         console.log('[generateGeminiStoryboard] Raw text length:', rawText.length);
@@ -5556,7 +5651,7 @@ async function generateGeminiStoryboard() {
         }
     } catch (err) {
         hideLoading();
-        alert('Gemini API Error: ' + err.message);
+        alert((currentProvider === 'openai' ? 'OpenAI' : 'Gemini') + ' API Error: ' + err.message);
     }
 }
 
@@ -5568,12 +5663,12 @@ function renderGeminiResult(parsed, obj, styleNames, mood) {
     let html = `
         <div class="storyboard-header">
             <div class="storyboard-title">
-                <h2>💎 <span>${esc(obj)}</span> — Full Storyboard by Gemini</h2>
+                <h2>${currentProvider === 'openai' ? '🧠' : '💎'} <span>${esc(obj)}</span> — Full Storyboard by ${currentProvider === 'openai' ? 'OpenAI' : 'Gemini'}</h2>
             </div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
                 <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#4f46e5);">${esc(styleNames)}</span>
                 <span class="style-badge" style="background:linear-gradient(135deg,#10b981,#059669);">${esc(mood)}</span>
-                <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#818cf8);">💎 Gemini AI</span>
+                <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#818cf8);">${currentProvider === 'openai' ? '🧠 OpenAI' : '💎 Gemini AI'}</span>
                 <button class="copy-btn" style="font-size:0.7rem;padding:5px 12px;" onclick="copyGeminiAll()">📋 Copy All</button>
                 <button class="copy-btn" style="font-size:0.7rem;padding:5px 12px;background:linear-gradient(135deg,#10b981,#059669);" onclick="downloadPromptAsJSON()">📥 JSON</button>
             </div>
@@ -5692,7 +5787,7 @@ function renderGeminiRaw(rawText, obj, styleNames, mood) {
             <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
                 <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#4f46e5);">${esc(styleNames)}</span>
                 <span class="style-badge" style="background:linear-gradient(135deg,#10b981,#059669);">${esc(mood)}</span>
-                <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#818cf8);">💎 Gemini AI</span>
+                <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#818cf8);">${currentProvider === 'openai' ? '🧠 OpenAI' : '💎 Gemini AI'}</span>
                 <button class="copy-btn" style="font-size:0.7rem;padding:5px 12px;" onclick="copyGeminiAll()">📋 Copy All</button>
             </div>
         </div>
@@ -6160,69 +6255,11 @@ function escapeForJS(str) {
     return str.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$').replace(/\n/g, '\\n').replace(/\r/g, '\\r');
 }
 
-
-
-// ===== PROVIDER COLLAPSE =====
-function toggleProviderSection() {
-    const body = document.getElementById('providerSectionBody');
-    const icon = document.getElementById('providerCollapseIcon');
-    if (!body || !icon) return;
-    const isOpen = body.style.display === 'block';
-    body.style.display = isOpen ? 'none' : 'block';
-    icon.textContent = isOpen ? '▼' : '▲';
-}
-
-// ===== MENU FALLBACK BINDINGS =====
-function bindMenuFallbacks() {
-    try {
-        const narrativeBtn = document.querySelector('.sidebar-section button[onclick*="narrativeModal"]');
-        if (narrativeBtn) narrativeBtn.addEventListener('click', () => openModal('narrativeModal'));
-
-        const moodBtn = document.querySelector('.sidebar-section button[onclick*="moodModal"]');
-        if (moodBtn) moodBtn.addEventListener('click', () => openModal('moodModal'));
-
-        const visualBtn = document.querySelector('.sidebar-section button[onclick*="visualModal"]');
-        if (visualBtn) visualBtn.addEventListener('click', () => openModal('visualModal'));
-
-        document.querySelectorAll('.prompt-mode-btn[data-mode]').forEach(btn => {
-            btn.addEventListener('click', () => selectPromptMode(btn));
-        });
-
-        document.querySelectorAll('.platform-mode-btn[data-platform]').forEach(btn => {
-            btn.addEventListener('click', () => selectPlatformMode(btn));
-        });
-
-        document.querySelectorAll('.platform-mode-btn[data-provider]').forEach(btn => {
-            btn.addEventListener('click', () => selectApiProvider(btn));
-        });
-
-        document.querySelectorAll('.modal-close').forEach(btn => {
-            const modal = btn.closest('.modal-overlay');
-            if (!modal) return;
-            btn.addEventListener('click', () => closeModal(modal.id));
-        });
-
-        document.querySelectorAll('.modal-overlay').forEach(overlay => {
-            overlay.addEventListener('click', (e) => {
-                if (e.target === overlay) closeModal(overlay.id);
-            });
-        });
-    } catch (e) {
-        console.error('[bindMenuFallbacks] error', e);
-    }
-}
-
-try {
-    bindMenuFallbacks();
-    refreshProviderUI();
-} catch (e) {
-    console.error('[init menu fallback] error', e);
-}
-
 // ===== INIT =====
 renderNarrativeGrid();
 renderMoodGrid();
 renderVisualGrid();
+refreshProviderUI();
 </script>
 
 
