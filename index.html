@@ -4,7 +4,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>1click1story — Viral Intelligence 2026 (v2.1)</title>
+    <title>Make-Story — Viral Intelligence 2026 (v2.1)</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=Prompt:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -916,9 +916,131 @@
             box-shadow: 0 4px 16px rgba(0,0,0,0.15);
         }
 
-        
+        /* Login removed */
 
-        
+        /* Access control removed */
+
+        /* ===== ADMIN BUTTON ===== */
+        .admin-btn {
+            background: rgba(108,99,255,0.08);
+            border: 1px solid rgba(108,99,255,0.15);
+            color: var(--accent);
+            font-size: 0.6rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Inter', 'Prompt', sans-serif;
+            transition: all 0.2s;
+        }
+        .admin-btn:hover {
+            background: rgba(108,99,255,0.15);
+            border-color: var(--accent);
+        }
+
+        /* ===== ADMIN PANEL MODAL ===== */
+        .admin-user-list {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+        .admin-user-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: rgba(30,30,60,0.5);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            margin-bottom: 6px;
+            transition: all 0.2s;
+        }
+        .admin-user-item:hover {
+            background: rgba(40,40,80,0.7);
+        }
+        .admin-user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .admin-user-info .user-email {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .admin-user-info .user-role {
+            font-size: 0.58rem;
+            padding: 2px 8px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .admin-user-info .user-role.role-admin {
+            background: rgba(108,99,255,0.1);
+            color: var(--accent);
+        }
+        .admin-user-info .user-role.role-user {
+            background: rgba(16,185,129,0.1);
+            color: var(--accent-green);
+        }
+        .admin-remove-btn {
+            background: rgba(239,68,68,0.08);
+            border: 1px solid rgba(239,68,68,0.15);
+            color: #ef4444;
+            font-size: 0.6rem;
+            padding: 4px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Inter', 'Prompt', sans-serif;
+            transition: all 0.2s;
+        }
+        .admin-remove-btn:hover {
+            background: rgba(239,68,68,0.15);
+        }
+        .admin-add-form {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .admin-add-form input {
+            flex: 1;
+            padding: 10px 14px;
+            background: var(--bg-input);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            font-size: 0.78rem;
+            font-family: 'Inter', 'Prompt', sans-serif;
+            color: var(--text-primary);
+            outline: none;
+        }
+        .admin-add-form input:focus { border-color: var(--accent); }
+        .admin-add-btn {
+            padding: 10px 18px;
+            background: var(--accent);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Inter', 'Prompt', sans-serif;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .admin-add-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+        .admin-add-role {
+            padding: 10px 12px;
+            background: var(--bg-input);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-family: 'Inter', 'Prompt', sans-serif;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+        .admin-user-count {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
     </style>
 </head>
 <body>
@@ -933,9 +1055,9 @@
 
 <!-- Header -->
 <div class="header">
-    <img src="/logo.png" alt="Logo" class="header-logo">
-    <h1>1CLICK1STORY</h1>
-    <div class="status-badge">🚀 GOD MODE ACTIVATED <span>(Powered by Viral Trends Mar 2026)</span></div>
+    <img src="./logo.png" alt="Logo" class="header-logo">
+    <h1>MAKE-STORY</h1>
+    <div class="status-badge">🚀 GOD MODE ACTIVATED <span>(Powered by Linen 2026)</span></div>
     <p>for labs.google/flow — 8-Scene Storyboard + Prompt Generator</p>
 </div>
 
@@ -1064,10 +1186,10 @@
             <div class="sidebar-section-title"><span class="icon">🎬</span> จำนวนฉาก <span style="color:var(--accent);font-size:0.65rem;">(1-40)</span></div>
             <select class="text-input" id="sceneCountSelect" onchange="selectedSceneCount = parseInt(this.value)">
                 <option value="1">1 ฉาก</option>
-                <option value="2">2 ฉาก</option>
+                <option value="2" selected="">2 ฉาก ⭐</option>
                 <option value="3">3 ฉาก</option>
                 <option value="4">4 ฉาก</option>
-                <option value="5" selected="">5 ฉาก ⭐</option>
+                <option value="5">5 ฉาก</option>
                 <option value="6">6 ฉาก</option>
                 <option value="7">7 ฉาก</option>
                 <option value="8">8 ฉาก ⭐</option>
@@ -1133,14 +1255,32 @@
         </div>
 
         <!-- User API Key -->
-        <div style="margin-bottom:12px;">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-                <span style="font-size:0.75rem;color:#94a3b8;">🔑 Gemini API Key (ไม่บังคับ)</span>
-                <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="font-size:0.65rem;color:#6366f1;text-decoration:none;border:1px solid rgba(99,102,241,0.3);padding:2px 6px;border-radius:4px;">สร้างฟรี</a>
+        <div id="geminiApiPanel" style="margin-bottom:12px;background:linear-gradient(180deg,rgba(4,20,56,0.92),rgba(8,28,70,0.88));border:1px solid rgba(59,130,246,0.28);border-radius:16px;box-shadow:0 12px 28px rgba(2,6,23,0.35);overflow:hidden;">
+            <button type="button" id="geminiApiCollapseBtn" onclick="toggleGeminiApiPanel()" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;background:transparent;border:none;cursor:pointer;">
+                <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+                    <span style="font-size:0.95rem;">🔑</span>
+                    <span style="font-size:0.78rem;color:#e2e8f0;font-weight:700;">Gemini API Key <span style="color:#94a3b8;font-weight:500;">(ไม่บังคับ)</span></span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+                    <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="font-size:0.68rem;color:#8b5cf6;text-decoration:none;border:1px solid rgba(99,102,241,0.45);padding:4px 9px;border-radius:8px;background:rgba(49,46,129,0.18);">สร้างฟรี</a>
+                    <span id="geminiApiCollapseIcon" style="font-size:0.8rem;color:#94a3b8;transition:transform 0.2s;">▼</span>
+                </div>
+            </button>
+            <div id="geminiApiPanelBody" style="padding:0 14px 14px 14px;display:none;">
+                <div style="font-size:0.68rem;color:#94a3b8;margin-bottom:8px;">Key จะถูกเก็บในเครื่องนี้เท่านั้น</div>
+                <div style="position:relative;margin-bottom:10px;">
+                    <input type="password" id="userApiKey" placeholder="วาง Gemini API Key ของคุณ" style="width:100%;box-sizing:border-box;background:rgba(15,23,42,0.6);border:1px solid rgba(16,185,129,0.35);border-radius:12px;padding:10px 42px 10px 12px;color:#e2e8f0;font-size:0.82rem;outline:none;transition:border-color 0.2s,box-shadow 0.2s;" onfocus="this.style.borderColor='#10b981';this.style.boxShadow='0 0 0 3px rgba(16,185,129,0.12)'" onblur="this.style.borderColor='rgba(16,185,129,0.35)';this.style.boxShadow='none'" oninput="handleGeminiKeyInput(this.value)">
+                    <button type="button" onclick="toggleGeminiKeyVisibility()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#fbbf24;cursor:pointer;font-size:1rem;">👁️</button>
+                </div>
+                <div style="display:flex;gap:8px;margin-bottom:10px;">
+                    <button type="button" onclick="connectGeminiKey()" style="flex:1;background:linear-gradient(135deg,#22c55e,#16a34a);border:none;border-radius:12px;color:#fff;font-size:0.8rem;font-weight:700;padding:11px 10px;cursor:pointer;box-shadow:0 8px 16px rgba(34,197,94,0.22);">เชื่อมต่อ Key</button>
+                    <button type="button" onclick="testGeminiKey()" style="flex:1;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.16);border-radius:12px;color:#ffffff;font-size:0.8rem;font-weight:700;padding:11px 10px;cursor:pointer;">ทดสอบ Key</button>
+                    <button type="button" onclick="promptDeleteGeminiKey()" style="background:rgba(127,29,29,0.55);border:1px solid rgba(248,113,113,0.22);border-radius:12px;color:#fecaca;font-size:0.8rem;font-weight:700;padding:11px 14px;cursor:pointer;">ลบ</button>
+                </div>
+                <div id="geminiKeyStatus" style="font-size:0.68rem;color:#64748b;line-height:1.5;">ยังไม่ได้เชื่อมต่อ Gemini API Key • ระบบจะเก็บ Key ใน localStorage ของเครื่องนี้เท่านั้น</div>
             </div>
-            <input type="password" id="userApiKey" placeholder="วาง API Key ของคุณที่นี่ (ถ้ามี)" style="width:100%;box-sizing:border-box;background:rgba(15,23,42,0.6);border:1px solid rgba(99,102,241,0.2);border-radius:8px;padding:8px 12px;color:#e2e8f0;font-size:0.8rem;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='rgba(99,102,241,0.2)'" oninput="saveUserApiKey(this.value)">
-            <div style="font-size:0.6rem;color:#64748b;margin-top:4px;">ใส่ Key ส่วนตัวเพื่อไม่ต้องรอคิว • Key จะเก็บในเครื่องคุณเท่านั้น</div>
         </div>
+
 
         <div id="geminiNativeStatus" style="margin-bottom:12px;padding:10px 12px;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.18);border-radius:10px;font-size:0.72rem;line-height:1.5;color:#c7d2fe;">
             ⚡ Gemini Native Full-Engine Mode พร้อมใช้งาน
@@ -1148,7 +1288,7 @@
 
         <!-- Generate -->
         <button class="generate-btn gemini-btn" onclick="generateGeminiStoryboard()">
-            💎 1click1story — สร้าง Full Storyboard
+            💎 Make-Story
         </button>
         
         <!-- Import JSON -->
@@ -1166,7 +1306,7 @@
         <!-- Empty State -->
         <div class="empty-state" id="emptyState">
             <div class="empty-icon">🚀</div>
-            <h3>1click1story</h3>
+            <h3>make-story</h3>
             <p>🧠 Viral Intelligence 2026<br>REALI-TEA / PATTERN INTERRUPT / SHOPPERTAINMENT / SONIC DRIVER<br><br>เลือกสิ่งของ, จำนวนฉาก, Narrative Style, Mood<br>แล้วกด "สร้าง Prompt ทั้งหมด" ระบบจะสร้าง Image + Video Prompt ให้ทันที</p>
         </div>
 
@@ -2377,12 +2517,6 @@ let persistentSystemPrompt = '';
 let generatedCaption = '';
 let generatedHashtags = '';
 
-// Gemini Native Full-Engine state
-let geminiNativeMeta = null;
-let geminiNativeFinishReason = '';
-let geminiNativeRoundCount = 0;
-let geminiNativeLastResponses = [];
-
 // Current Batch Info: ติดตามว่ากำลังเจน Batch ไหน (1-10, 11-20, 21-30, 31-40)
 let currentBatchNumber = 1;
 const SCENES_PER_BATCH = 10;
@@ -2811,8 +2945,7 @@ function initializeScenesContainer(obj, styleNames, mood) {
             <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
                 <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#4f46e5);">${esc(styleNames)}</span>
                 <span class="style-badge" style="background:linear-gradient(135deg,#10b981,#059669);">${esc(mood)}</span>
-                <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#818cf8);">💎 Gemini Native Full-Engine</span>
-                <span class="style-badge" style="background:linear-gradient(135deg,#f59e0b,#d97706);">rounds: ${esc(String(geminiNativeRoundCount || 1))} • finish: ${esc(geminiNativeFinishReason || 'unknown')}</span>
+                <span class="style-badge" style="background:linear-gradient(135deg,#6366f1,#818cf8);">💎 Gemini AI</span>
                 <button class="copy-btn" style="font-size:0.7rem;padding:5px 12px;" onclick="copyGeminiAll()">📋 Copy All</button>
             </div>
         </div>
@@ -4754,6 +4887,98 @@ function getActiveApiKey() {
     return getUserApiKey();
 }
 
+function handleGeminiKeyInput(key) {
+    saveUserApiKey(key);
+    const hasKey = !!(key && key.trim());
+    updateGeminiKeyStatus(
+        hasKey
+            ? 'พิมพ์ Key แล้ว • กดเชื่อมต่อหรือทดสอบได้ทันที'
+            : 'ยังไม่ได้เชื่อมต่อ Gemini API Key • ระบบจะเก็บ Key ใน localStorage ของเครื่องนี้เท่านั้น',
+        hasKey
+    );
+}
+
+function updateGeminiKeyStatus(message, isConnected = false) {
+    const el = document.getElementById('geminiKeyStatus');
+    if (!el) return;
+    el.textContent = message;
+    el.style.color = isConnected ? '#93c5fd' : '#64748b';
+}
+
+function toggleGeminiApiPanel(forceOpen) {
+    const body = document.getElementById('geminiApiPanelBody');
+    const icon = document.getElementById('geminiApiCollapseIcon');
+    if (!body || !icon) return;
+    const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : body.style.display === 'none';
+    body.style.display = shouldOpen ? 'block' : 'none';
+    icon.style.transform = shouldOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+}
+
+function toggleGeminiKeyVisibility() {
+    const input = document.getElementById('userApiKey');
+    if (!input) return;
+    input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+function connectGeminiKey() {
+    const input = document.getElementById('userApiKey');
+    const key = (input?.value || '').trim();
+    if (!key) {
+        updateGeminiKeyStatus('กรุณาวาง Gemini API Key ก่อนเชื่อมต่อ', false);
+        toggleGeminiApiPanel(true);
+        return;
+    }
+    saveUserApiKey(key);
+    updateGeminiNativeModeStatus(`⚡ Gemini Native Full-Engine Mode • ใช้ Key ส่วนตัวแล้ว`);
+    updateGeminiKeyStatus('เชื่อมต่อ Key เรียบร้อย • ระบบจะใช้ Key นี้ในการเรียก Gemini', true);
+}
+
+async function testGeminiKey() {
+    const input = document.getElementById('userApiKey');
+    const key = (input?.value || '').trim();
+    if (!key) {
+        updateGeminiKeyStatus('กรุณาวาง Gemini API Key ก่อนทดสอบ', false);
+        toggleGeminiApiPanel(true);
+        return;
+    }
+    updateGeminiKeyStatus('กำลังทดสอบ Gemini API Key...', false);
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(key)}`);
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+            throw new Error(data.error?.message || `Gemini API Error ${response.status}`);
+        }
+        saveUserApiKey(key);
+        updateGeminiNativeModeStatus(`⚡ Gemini Native Full-Engine Mode • ทดสอบ Key ผ่านแล้ว`);
+        updateGeminiKeyStatus('ทดสอบ Key สำเร็จ • พร้อมใช้งานกับ Gemini Native Full-Engine Mode', true);
+    } catch (error) {
+        updateGeminiKeyStatus(`ทดสอบ Key ไม่ผ่าน • ${error.message}`, false);
+    }
+}
+
+function promptDeleteGeminiKey() {
+    const hasKey = !!getUserApiKey();
+    if (!hasKey) {
+        updateGeminiKeyStatus('ยังไม่มี Key ให้ลบ', false);
+        return;
+    }
+    openModal('confirmDeleteGeminiKeyModal');
+}
+
+function deleteGeminiKeyConfirmed() {
+    saveUserApiKey('');
+    const input = document.getElementById('userApiKey');
+    if (input) input.value = '';
+    updateGeminiNativeModeStatus('⚡ Gemini Native Full-Engine Mode พร้อมใช้งาน');
+    updateGeminiKeyStatus('ลบ Gemini API Key แล้ว • ระบบจะใช้ค่า default หรือรอให้ใส่ Key ใหม่', false);
+    closeModal('confirmDeleteGeminiKeyModal');
+}
+
+function updateGeminiNativeModeStatus(message) {
+    const el = document.getElementById('geminiNativeStatus');
+    if (el) el.textContent = message;
+}
+
 // โหลด user key จาก localStorage เมื่อเปิดหน้าเว็บ
 document.addEventListener('DOMContentLoaded', () => {
     const savedKey = getUserApiKey();
@@ -4761,136 +4986,25 @@ document.addEventListener('DOMContentLoaded', () => {
     if (input && savedKey) {
         input.value = savedKey;
     }
+    toggleGeminiApiPanel(false);
+    if (savedKey) {
+        updateGeminiKeyStatus('พบ Gemini API Key ที่บันทึกไว้ในเครื่องนี้ • พร้อมใช้งาน', true);
+        updateGeminiNativeModeStatus('⚡ Gemini Native Full-Engine Mode • ใช้ Key ที่บันทึกไว้');
+    } else {
+        updateGeminiKeyStatus('ยังไม่ได้เชื่อมต่อ Gemini API Key • ระบบจะเก็บ Key ใน localStorage ของเครื่องนี้เท่านั้น', false);
+    }
 });
 
 // ===== DIRECT GEMINI API (ไม่ผ่าน Cloud Functions — ใช้ prompt เต็มจาก prompts-client.js) =====
 const GEMINI_API_KEY = 'AIzaSyARSj0cAw4At9k1AzIsXX3e41ZTsEEPLSw';
-const GEMINI_NATIVE_MODEL = 'gemini-2.5-flash';
-const GEMINI_NATIVE_MAX_ROUNDS = 4;
-
-function updateGeminiNativeStatus(message, tone = 'info') {
-    const el = document.getElementById('geminiNativeStatus');
-    if (!el) return;
-    const tones = {
-        info: {
-            background: 'rgba(99,102,241,0.08)',
-            border: 'rgba(99,102,241,0.18)',
-            color: '#c7d2fe'
-        },
-        success: {
-            background: 'rgba(16,185,129,0.10)',
-            border: 'rgba(16,185,129,0.22)',
-            color: '#bbf7d0'
-        },
-        warn: {
-            background: 'rgba(245,158,11,0.10)',
-            border: 'rgba(245,158,11,0.22)',
-            color: '#fde68a'
-        },
-        error: {
-            background: 'rgba(239,68,68,0.10)',
-            border: 'rgba(239,68,68,0.22)',
-            color: '#fecaca'
-        }
-    };
-    const cfg = tones[tone] || tones.info;
-    el.textContent = message;
-    el.style.background = cfg.background;
-    el.style.borderColor = cfg.border;
-    el.style.color = cfg.color;
-}
-
-function extractGeminiTextFromCandidate(candidate) {
-    const parts = candidate?.content?.parts || [];
-    return parts
-        .map(part => typeof part?.text === 'string' ? part.text : '')
-        .filter(Boolean)
-        .join('\n')
-        .trim();
-}
-
-function extractGeminiResponseMeta(data, response, roundIndex) {
-    const candidate = data?.candidates?.[0] || null;
-    const usage = data?.usageMetadata || null;
-    const meta = {
-        roundIndex,
-        status: response.status,
-        modelVersion: data?.modelVersion || GEMINI_NATIVE_MODEL,
-        finishReason: candidate?.finishReason || '',
-        avgLogprobs: candidate?.avgLogprobs,
-        usageMetadata: usage,
-        promptTokenCount: usage?.promptTokenCount ?? null,
-        candidatesTokenCount: usage?.candidatesTokenCount ?? null,
-        totalTokenCount: usage?.totalTokenCount ?? null,
-        responseId: data?.responseId || null
-    };
-    return meta;
-}
-
-function dedupeScenesByNumber(scenes) {
-    const map = new Map();
-    (Array.isArray(scenes) ? scenes : []).forEach(scene => {
-        const num = Number(scene?.scene_number);
-        if (!Number.isFinite(num)) return;
-        map.set(num, scene);
-    });
-    return Array.from(map.entries())
-        .sort((a, b) => a[0] - b[0])
-        .map(([, scene]) => scene);
-}
-
-function buildAutoContinuePrompt(settings, parsedScenes, lastMeta) {
-    const existingScenes = dedupeScenesByNumber(parsedScenes || []);
-    const existingSceneNumbers = existingScenes.map(scene => scene.scene_number).filter(Number.isFinite);
-    const highestScene = existingSceneNumbers.length > 0 ? Math.max(...existingSceneNumbers) : 0;
-    const remaining = [];
-    for (let i = highestScene + 1; i <= settings.sceneCount; i++) remaining.push(i);
-    const summary = existingScenes.slice(-3).map(scene => {
-        return `Scene ${scene.scene_number}: ${scene.scene_name || '-'}\n- Speaker: ${scene.speaker || '-'}\n- Dialogue: ${(scene.dialogue || '-').replace(/\s+/g, ' ').slice(0, 180)}\n- Action: ${(scene.action || '-').replace(/\s+/g, ' ').slice(0, 160)}`;
-    }).join('\n\n');
-
-    return `ตอบต่อจากงานเดิมทันทีในโหมด Gemini Native Full-Engine Mode\n\nสถานะล่าสุด:\n- finishReason: ${lastMeta?.finishReason || 'unknown'}\n- สร้างได้แล้ว ${existingScenes.length} จาก ${settings.sceneCount} ฉาก\n- ฉากที่สร้างแล้ว: ${existingSceneNumbers.join(', ') || '-'}\n- ฉากที่ยังต้องสร้างต่อ: ${remaining.join(', ') || '-'}\n\nกฎบังคับ:\n1. ห้ามเขียนซ้ำฉากเดิมถ้าไม่จำเป็น\n2. ให้เริ่มที่ Scene ${highestScene + 1} และสร้างต่อจนถึง Scene ${settings.sceneCount}\n3. ต้องใช้ system prompt เดิมและเรื่องเดิม 100%\n4. ถ้ามี ---CAPTION_START--- หรือ ---HASHTAG_START--- แล้ว ให้ใส่เฉพาะตอนครบทุกฉากเท่านั้น\n5. ห้ามเกริ่นนำ ห้ามอธิบาย ให้ตอบเป็นผลลัพธ์ฉากต่อเนื่องทันที\n\nสรุปฉากล่าสุดเพื่อรักษาความต่อเนื่อง:\n${summary || '-'}\n\nเริ่มสร้างต่อทันทีตอนนี้`; 
-}
-
-async function callGeminiNativeRound(apiUrl, systemInstruction, contents, roundIndex) {
-    const requestBody = {
-        system_instruction: { parts: [{ text: systemInstruction }] },
-        contents,
-        generationConfig: {
-            temperature: 1.0,
-            maxOutputTokens: 65536
-        }
-    };
-
-    const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestBody)
-    });
-
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.error?.message || `Gemini API Error ${response.status}`);
-    }
-
-    const candidate = data?.candidates?.[0] || null;
-    const text = extractGeminiTextFromCandidate(candidate);
-    if (!text) {
-        throw new Error('ไม่ได้รับข้อมูลจาก Gemini');
-    }
-
-    const meta = extractGeminiResponseMeta(data, response, roundIndex);
-    return { text, meta, raw: data };
-}
 
 async function callGeminiDirect(settings) {
     const apiKey = getUserApiKey() || GEMINI_API_KEY;
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_NATIVE_MODEL}:generateContent?key=${apiKey}`;
-
-    if (typeof buildGeminiSystemPrompt !== 'function') {
-        throw new Error('ไม่พบ buildGeminiSystemPrompt() จาก prompts-client.js');
-    }
-
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+    
+    console.log('[Direct] Calling Gemini API directly from client...', { includeTextOverlay: settings.includeTextOverlay, promptMode: settings.promptMode });
+    
+    // Build full system prompt จาก prompts-client.js (เหมือน server-side เป๊ะ!)
     const systemInstruction = buildGeminiSystemPrompt(
         settings.sceneCount,
         settings.sceneNums,
@@ -4902,94 +5016,77 @@ async function callGeminiDirect(settings) {
         settings.includeTextOverlay,
         settings.glassSkin
     );
-
-    persistentSystemPrompt = systemInstruction;
-    geminiNativeMeta = null;
-    geminiNativeFinishReason = '';
-    geminiNativeRoundCount = 0;
-    geminiNativeLastResponses = [];
-
-    console.log('[Gemini Native] buildGeminiSystemPrompt()', {
-        sceneCount: settings.sceneCount,
+    
+    // DEBUG: ตรวจสอบว่า prompt มี TEXT OVERLAY instruction หรือไม่
+    const hasTextOverlayInPrompt = systemInstruction.includes('TEXT OVERLAY');
+    const hasNoTextInPrompt = systemInstruction.includes('NO TEXT IN IMAGE');
+    const isReviewMode = systemInstruction.includes('UGC Product Review Director');
+    console.log('[DEBUG-TEXTOVERLAY]', { 
+        toggleValue: settings.includeTextOverlay, 
         promptMode: settings.promptMode,
-        platformMode: settings.platformMode,
-        includeTextOverlay: settings.includeTextOverlay,
-        glassSkin: settings.glassSkin,
-        systemPromptLength: systemInstruction.length
+        isReviewMode,
+        hasTextOverlayInPrompt, 
+        hasNoTextInPrompt,
+        promptFirst300: systemInstruction.substring(0, 300),
+        promptSearchOverlay: systemInstruction.includes('TEXT OVERLAY บังคับ') ? 'FOUND ✅' : 'NOT FOUND ❌',
+        promptSearchHeadline: systemInstruction.includes('bold Thai text headline') ? 'FOUND ✅' : 'NOT FOUND ❌'
     });
-
-    const initialParts = [];
+    
+    // สร้าง parts array สำหรับ user message
+    const parts = [];
+    
+    // เพิ่มรูปภาพถ้ามี
     if (settings.productImageBase64) {
-        initialParts.push({ inline_data: { mime_type: settings.productImageMimeType || 'image/jpeg', data: settings.productImageBase64 } });
+        parts.push({ inline_data: { mime_type: settings.productImageMimeType || 'image/jpeg', data: settings.productImageBase64 } });
     }
     if (settings.characterImageBase64) {
-        initialParts.push({ inline_data: { mime_type: settings.characterImageMimeType || 'image/jpeg', data: settings.characterImageBase64 } });
+        parts.push({ inline_data: { mime_type: settings.characterImageMimeType || 'image/jpeg', data: settings.characterImageBase64 } });
     }
     if (settings.characterImage2Base64) {
-        initialParts.push({ inline_data: { mime_type: settings.characterImage2MimeType || 'image/jpeg', data: settings.characterImage2Base64 } });
+        parts.push({ inline_data: { mime_type: settings.characterImage2MimeType || 'image/jpeg', data: settings.characterImage2Base64 } });
     }
     if (settings.characterImage3Base64) {
-        initialParts.push({ inline_data: { mime_type: settings.characterImage3MimeType || 'image/jpeg', data: settings.characterImage3Base64 } });
+        parts.push({ inline_data: { mime_type: settings.characterImage3MimeType || 'image/jpeg', data: settings.characterImage3Base64 } });
     }
-    initialParts.push({ text: settings.userInput });
-
-    const contents = [{ role: 'user', parts: initialParts }];
-    const collectedTexts = [];
-    let combinedScenes = [];
-
-    updateGeminiNativeStatus('⚡ Gemini Native Full-Engine Mode กำลังทำงาน…', 'info');
-
-    for (let roundIndex = 1; roundIndex <= GEMINI_NATIVE_MAX_ROUNDS; roundIndex++) {
-        geminiNativeRoundCount = roundIndex;
-        updateGeminiNativeStatus(`⚡ Gemini Native Full-Engine Mode • รอบที่ ${roundIndex}`, 'info');
-
-        const roundResult = await callGeminiNativeRound(apiUrl, systemInstruction, contents, roundIndex);
-        const { text, meta } = roundResult;
-        geminiNativeMeta = meta;
-        geminiNativeFinishReason = meta.finishReason || '';
-        geminiNativeLastResponses.push({ meta, textLength: text.length });
-        collectedTexts.push(text);
-        contents.push({ role: 'model', parts: [{ text }] });
-
-        const combinedText = collectedTexts.join('\n\n');
-        const parsed = parseGeminiResponse(combinedText);
-        combinedScenes = dedupeScenesByNumber(parsed.scenes || []);
-
-        console.log('[Gemini Native] Round result', {
-            roundIndex,
-            finishReason: meta.finishReason,
-            textLength: text.length,
-            parsedScenes: combinedScenes.length,
-            totalTokenCount: meta.totalTokenCount
-        });
-
-        const isComplete = combinedScenes.length >= settings.sceneCount;
-        if (isComplete) {
-            updateGeminiNativeStatus(`✅ Gemini Native Full-Engine Mode สำเร็จครบ ${combinedScenes.length}/${settings.sceneCount} ฉาก`, 'success');
-            break;
+    
+    // เพิ่มข้อความ user input
+    parts.push({ text: settings.userInput });
+    
+    const requestBody = {
+        system_instruction: { parts: [{ text: systemInstruction }] },
+        contents: [{ role: 'user', parts: parts }],
+        generationConfig: {
+            temperature: 1.0,
+            maxOutputTokens: 65536
         }
-
-        const canContinue = roundIndex < GEMINI_NATIVE_MAX_ROUNDS;
-        if (!canContinue) {
-            updateGeminiNativeStatus(`⚠️ Gemini Native Full-Engine Mode ได้ ${combinedScenes.length}/${settings.sceneCount} ฉาก (finishReason: ${meta.finishReason || 'unknown'})`, 'warn');
-            break;
-        }
-
-        const continuePrompt = buildAutoContinuePrompt(settings, combinedScenes, meta);
-        contents.push({ role: 'user', parts: [{ text: continuePrompt }] });
-        updateGeminiNativeStatus(`⚠️ คำตอบยังไม่ครบ ${combinedScenes.length}/${settings.sceneCount} ฉาก • กำลัง auto-continue`, 'warn');
-    }
-
-    const finalText = collectedTexts.join('\n\n');
-    chatHistory = contents.slice(-CHAT_HISTORY_LIMIT);
-    console.log('[Gemini Native] Final summary', {
-        rounds: geminiNativeRoundCount,
-        finishReason: geminiNativeFinishReason,
-        scenes: combinedScenes.length,
-        requestedScenes: settings.sceneCount,
-        meta: geminiNativeMeta
+    };
+    
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody)
     });
-    return finalText;
+    
+    const data = await response.json();
+    
+    if (!response.ok) {
+        throw new Error(data.error?.message || `Gemini API Error ${response.status}`);
+    }
+    
+    const resultText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!resultText) {
+        throw new Error('ไม่ได้รับข้อมูลจาก Gemini');
+    }
+    
+    // เก็บ system prompt + chat history สำหรับ follow-up
+    persistentSystemPrompt = systemInstruction;
+    chatHistory = [
+        { role: 'user', parts: [{ text: settings.userInput }] },
+        { role: 'model', parts: [{ text: resultText }] }
+    ];
+    
+    console.log('[Direct] Success! Text length:', resultText.length);
+    return resultText;
 }
 
 async function callGeminiViaCloud(settings) {
@@ -5001,7 +5098,7 @@ async function callGeminiViaCloud(settings) {
 // ===== FALLBACK: Direct Gemini Continue (เมื่อ Cloud Function 503) =====
 async function callGeminiContinueDirect(userInput, systemPrompt, clientChatHistory) {
     const apiKey = getUserApiKey() || GEMINI_API_KEY;
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_NATIVE_MODEL}:generateContent?key=${apiKey}`;
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
     
     console.log('[Fallback] Calling Gemini Continue directly...');
     
@@ -5488,7 +5585,6 @@ async function generateGeminiStoryboard() {
         }
     } catch (err) {
         hideLoading();
-        updateGeminiNativeStatus('❌ Gemini Native Full-Engine Mode error: ' + err.message, 'error');
         alert('Gemini API Error: ' + err.message);
     }
 }
@@ -6104,4 +6200,20 @@ renderVisualGrid();
 // Login system removed: page opens directly without authentication.
 let currentUserRole = "guest";
 </script>
+
+<div class="modal-overlay" id="confirmDeleteGeminiKeyModal">
+    <div class="modal" style="max-width:420px;">
+        <div class="modal-header">
+            <h3>🗑️ ยืนยันการลบ Gemini API Key</h3>
+            <button class="modal-close" onclick="closeModal('confirmDeleteGeminiKeyModal')">✕</button>
+        </div>
+        <div class="modal-body">
+            <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.8;margin-bottom:18px;">ต้องการลบ Gemini API Key ที่เก็บไว้ในเครื่องนี้หรือไม่?</div>
+            <div style="display:flex;gap:10px;">
+                <button type="button" class="action-btn open-gem" style="flex:1;justify-content:center;" onclick="closeModal('confirmDeleteGeminiKeyModal')">ยกเลิก</button>
+                <button type="button" class="action-btn" style="flex:1;justify-content:center;background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff;" onclick="deleteGeminiKeyConfirmed()">ลบ Key</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body></html>
