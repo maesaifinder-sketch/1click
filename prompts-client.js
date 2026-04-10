@@ -39,6 +39,14 @@ function buildPixar3dSystemPrompt(sceneCount, sceneNums, hasImage, stylePersonal
     };
     const platform = platformSettings[platformMode] || platformSettings['flow'];
     const platformLabel = platformMode === 'flow' ? 'Flow' : (platformMode === 'grok' ? 'Grok' : 'Super Grok');
+
+    const safeLanguageSection = `
+🛡️ SAFE LANGUAGE ENFORCEMENT (สำคัญมาก!):
+- ห้ามใช้คำโฆษณาเกินจริง คำการันตี คำทางการแพทย์ คำผลลัพธ์ไว คำจัดอันดับ หรือคำชวนซื้อขายนอกระบบในทุกส่วนของผลลัพธ์
+- หลีกเลี่ยงคำต่อไปนี้โดยเด็ดขาด: 100%, guarantee, guaranteed, certified, best seller, no.1, number 1, top 1, before-after, cure, heal, instant results, doctor, FDA, research-backed, detox, lose weight, profit guaranteed, LINE, WhatsApp, DM, Inbox และคำไทยที่มีความหมายเดียวกัน
+- ให้ใช้ภาษากลางที่ปลอดภัยแทน เช่น “หลายคนชอบ”, “ดูแล”, “ค่อย ๆ เห็นความเปลี่ยนแปลง”, “ราคาเข้าถึงง่าย”, “กดดูรายละเอียดเพิ่มเติมได้เลย”
+- ใช้ภาษาบรรยายเชิงประสบการณ์และการนำเสนอสินค้าเท่านั้น ห้ามเขียนเหมือนคำรับรองผลหรือคำรักษาโรค
+`;
     
     // Text Overlay instruction - ขึ้นกับ Toggle
     const textOverlayInstruction = includeTextOverlay ? `
@@ -106,6 +114,7 @@ Status: 🚀 GOD MODE ACTIVATED (Powered by Viral Trends MARCH 2026 & Top 1% Hoo
 - โหมด Super Grok (10 วินาที): คุมความยาววิดีโอ 10 วินาที จังหวะภาพดึงอารมณ์ร่วม บทพูด 3-4 ประโยค (30-40 คำ)
 ⚠️ IMAGE STYLE UNLINK (ปลดล็อกสไตล์ภาพ): สไตล์ภาพ (เช่น 3D Pixar, Hyper-realistic, Anime) ให้ยึดตามคำสั่งที่ User พิมพ์ระบุมาเป็นอันดับ 1 เสมอ! หาก User ไม่ได้ระบุ ถึงจะใช้ Default ของโหมด (Flow = 3D Pixar / Grok = Hyper-realistic)
 ⚠️ STRICT PERSONA ENFORCEMENT (บังคับใช้บุคลิกตามสั่ง): บุคลิก ท่าทาง และโทนอารมณ์ ต้องยึดตาม "Style" หรือ "Mood" ที่ User เลือกมาเสมอ ห้ามให้โหมดแพลตฟอร์มมาโอเวอร์ไรด์ (เช่น หากเลือกสไตล์ ASMR หรือนุ่มนวล แม้จะอยู่ในโหมด Grok ก็ห้ามก้าวร้าว ห้ามปากแจ๋วเด็ดขาด ต้องนุ่มนวลตาม Style 100%)
+${safeLanguageSection}
 
 ⛔️ SYSTEM OVERRIDE (CRITICAL RULES):
 1. DISABLE AUTO-GENERATION: ⚠️ ห้ามใช้เครื่องมือสร้างภาพ (Image Gen Tool / Nano Banana) หรือวิดีโอเด็ดขาด! หน้าที่ของคุณคือ "เขียน Text Prompt" ลงในกล่อง Code Block เท่านั้น ห้ามสร้างภาพจริงออกมาไม่ว่า User จะสั่งยังไง

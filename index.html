@@ -3862,9 +3862,7 @@ No subtitles, no on-screen text. No narrator. Only character voice. STRICTLY THA
             // ถ้า extractSceneFromRawText ไม่ได้ Image Prompt ให้ลอง parseGeminiResponse
             if (!newScene.image_prompt) {
                 const parsed = parseGeminiResponse(rawText);
-                if (parsed.scenes?.length) {
-                    parsed.scenes = smartReplaceScenes(parsed.scenes);
-                }
+                if (parsed.scenes?.length) parsed.scenes = smartReplaceScenes(parsed.scenes);
                 if (parsed.caption) parsed.caption = smartReplaceText(parsed.caption);
                 if (parsed.hashtags) parsed.hashtags = smartReplaceText(parsed.hashtags);
                 console.log('[sendFollowUp] parseGeminiResponse result:', parsed.scenes.length, 'scenes');
@@ -3919,6 +3917,7 @@ No subtitles, no on-screen text. No narrator. Only character voice. STRICTLY THA
         } else {
             // แก้ไขทุกฉาก (targetScene === 'all')
             const parsed = parseGeminiResponse(rawText);
+            if (parsed.scenes?.length) parsed.scenes = smartReplaceScenes(parsed.scenes);
             if (parsed.scenes.length > 0) {
                 // มีฉากที่แก้ไข - อัพเดททุกฉากที่ parse ได้
                 const styleNames = selectedStyles.length > 0 
@@ -5188,19 +5187,16 @@ function extractPromptContent(rawText) {
 }
 
 
-
-/* ================================
-   SMART REPLACE ENGINE
-================================ */
+// ===== SMART REPLACE ENGINE =====
 const SMART_REPLACE_RULES = [
     { pattern: /100%\s*เห็นผล/gi, to: 'หลายคนชอบผลลัพธ์ที่ได้' },
     { pattern: /100%\s*ปลอดภัย/gi, to: 'ออกแบบให้ใช้งานได้อย่างสบายใจ' },
+    { pattern: /ของแท้\s*100%/gi, to: 'สินค้าตรงตามรายละเอียด' },
     { pattern: /\b100%\b/gi, to: 'อย่างเต็มที่' },
-    { pattern: /การันตี(เห็นผล|ผล)?/gi, to: 'หลายคนเลือกใช้ต่อเนื่อง' },
+    { pattern: /การันตี(เห็นผล|ผล|กำไร)?/gi, to: 'หลายคนเลือกใช้ต่อเนื่อง' },
     { pattern: /รับรอง(ผล)?/gi, to: 'มีคนใช้ซ้ำอย่างต่อเนื่อง' },
     { pattern: /รับประกัน(ผล)?/gi, to: 'เป็นอีกตัวเลือกที่น่าสนใจ' },
-    { pattern: /guaranteed?|guarantee/gi, to: 'widely preferred' },
-    { pattern: /approved|official/gi, to: 'product details' },
+    { pattern: /\b(certified|guaranteed?|guarantee|approved|official)\b/gi, to: 'product details' },
 
     { pattern: /\bbest\s*seller\b/gi, to: 'ตัวที่หลายคนสนใจ' },
     { pattern: /\bbestseller\b/gi, to: 'ตัวที่หลายคนสนใจ' },
@@ -5208,56 +5204,72 @@ const SMART_REPLACE_RULES = [
     { pattern: /\bno\.?\s*1\b/gi, to: 'ตัวเลือกยอดนิยม' },
     { pattern: /\bnumber\s*1\b/gi, to: 'ตัวเลือกยอดนิยม' },
     { pattern: /\btop\s*1\b/gi, to: 'ตัวเลือกที่คนพูดถึง' },
-    { pattern: /อันดับหนึ่ง/gi, to: 'ตัวเลือกยอดนิยม' },
-    { pattern: /ขายดีที่สุด|ขายดีอันดับหนึ่ง/gi, to: 'หลายคนเลือกใช้' },
-    { pattern: /ดีที่สุดในโลก|ดีที่สุดในไทย|ดีที่สุด/gi, to: 'น่าใช้' },
-    { pattern: /คุ้มที่สุด/gi, to: 'คุ้มค่า' },
+    { pattern: /อันดับหนึ่ง|ขายดีที่สุด|ขายดีอันดับหนึ่ง/gi, to: 'หลายคนเลือกใช้' },
     { pattern: /ราคาถูกที่สุด|ถูกที่สุด/gi, to: 'ราคาเข้าถึงง่าย' },
+    { pattern: /คุ้มที่สุด/gi, to: 'คุ้มค่า' },
+    { pattern: /ดีที่สุด(ในโลก|ในไทย)?/gi, to: 'น่าใช้' },
+    { pattern: /ที่เดียวในไทย|เจ้าแรกในไทย|เจ้าเดียวในไทย/gi, to: 'เป็นอีกตัวเลือกที่น่าสนใจ' },
 
     { pattern: /before[\s-]*after/gi, to: 'visible progression' },
     { pattern: /ก่อนหลัง|เปรียบเทียบก่อนหลัง/gi, to: 'เปรียบเทียบความเปลี่ยนแปลง' },
 
-    { pattern: /รักษาโรค|รักษาได้|รักษาหาย|รักษาหายขาด/gi, to: 'ดูแลร่างกาย' },
-    { pattern: /หายขาด|หายถาวร|หายสนิท/gi, to: 'ดีขึ้นอย่างต่อเนื่อง' },
-    { pattern: /กินแล้วหาย/gi, to: 'ใช้แล้วรู้สึกดูแลตัวเองได้ดีขึ้น' },
-    { pattern: /ป้องกันมะเร็ง|กันมะเร็ง/gi, to: 'ดูแลสุขภาพโดยรวม' },
-    { pattern: /ป้องกันโรค|แก้โรค/gi, to: 'ดูแลสุขภาพในชีวิตประจำวัน' },
-    { pattern: /ฟื้นฟูตับ\/ไต|ล้างพิษตับ|ฟอกตับ|ฟอกไต/gi, to: 'ดูแลสมดุลร่างกาย' },
-    { pattern: /บำรุงสายตา/gi, to: 'ดูแลดวงตาในชีวิตประจำวัน' },
+    { pattern: /หายขาด|หายถาวร|หายสนิท|หายแน่นอน/gi, to: 'ดีขึ้นอย่างต่อเนื่อง' },
+    { pattern: /สิวหายขาด|สิวหาย|สิวไม่ขึ้นอีก|ไม่มีสิวอีกเลย|ไม่มีสิวอีก/gi, to: 'ดูแลผิวที่เป็นสิวได้ในชีวิตประจำวัน' },
+    { pattern: /ฝ้าหาย|ฝ้าจางถาวร|กระจางถาวร/gi, to: 'ช่วยดูแลรอยผิวที่กังวล' },
+    { pattern: /\bหาย\b/gi, to: 'บรรเทาให้รู้สึกสบายขึ้น' },
+    { pattern: /รักษาหายขาด|รักษาหาย|รักษาได้|รักษา/gi, to: 'ดูแลร่างกาย' },
+    { pattern: /ป้องกันโรค|รักษาโรค|แก้โรค/gi, to: 'ดูแลสุขภาพในชีวิตประจำวัน' },
+    { pattern: /แก้เบาหวาน|แก้ความดัน|แก้ไขมันในเลือด|ลดน้ำตาลในเลือด|ลดความดัน/gi, to: 'ดูแลสุขภาพโดยรวม' },
 
-    { pattern: /ขาวทันทีที่ใช้|ขาวทันที|ขาวไว|ขาวถาวร|ขาวเร่งด่วน|ขาวอมชมพู|ขาวอมชมพูถาวร/gi, to: 'ผิวดูสว่างขึ้นอย่างเป็นธรรมชาติ' },
-    { pattern: /หน้าเด้ง|เด้งทันที|เด้งดึ๋งทันที/gi, to: 'ผิวดูอิ่มฟู' },
-    { pattern: /หน้าเด็ก|หน้าเด็กถาวร|ผิวเด็ก|ผิวอ่อนเยาว์|ย้อนวัยทันที|ย้อนวัยสิบปี/gi, to: 'ผิวดูสดใส' },
-    { pattern: /ยกกระชับหน้าทันที|ยกกระชับทันที|หน้า\s*V-?Shape|วีเชฟถาวร|หน้าวีเชฟทันที/gi, to: 'ผิวดูเฟิร์มขึ้นและกรอบหน้าดูมีมิติ' },
-    { pattern: /ลดริ้วรอยถาวร|ลบรอยตีนกา/gi, to: 'ผิวดูเรียบเนียนขึ้น' },
-    { pattern: /รักษาฝ้า|รักษาสิว|ฆ่าเชื้อสิว|รักษาแผลเป็น/gi, to: 'ดูแลผิวในชีวิตประจำวัน' },
-    { pattern: /จุดด่างดำ/gi, to: 'รอยผิวที่กังวล' },
-    { pattern: /หน้าใสทันที|หน้าใสถาวร|หน้าใสไร้สิว|หน้าใสไร้รอย/gi, to: 'ผิวดูสดใสขึ้น' },
+    { pattern: /เห็นผลตั้งแต่ครั้งแรก|เห็นผลตั้งแต่วันแรก|เห็นผลวันแรก/gi, to: 'หลายคนรู้สึกประทับใจตั้งแต่ช่วงแรกที่ใช้' },
+    { pattern: /เห็นผลใน\s*(3|7)\s*วัน/gi, to: 'ค่อย ๆ เห็นความเปลี่ยนแปลงตามการใช้งาน' },
+    { pattern: /เห็นผลทันที|เห็นผลเร็ว|เห็นผลไว|เห็นผลชัวร์|เห็นผลแน่นอน|กินแล้วดีทันที|กินแล้วเห็นผล/gi, to: 'รู้สึกถึงความเปลี่ยนแปลงเมื่อใช้อย่างต่อเนื่อง' },
+    { pattern: /\bเห็นผล\b/gi, to: 'หลายคนรู้สึกว่าตอบโจทย์' },
 
-    { pattern: /เห็นผลทันที|เห็นผลชัวร์|เห็นผลไว|เห็นผลเร็ว/gi, to: 'รู้สึกถึงความเปลี่ยนแปลงเมื่อใช้อย่างต่อเนื่อง' },
-    { pattern: /เห็นผลตั้งแต่ครั้งแรก|เห็นผลตั้งแต่วันแรก/gi, to: 'หลายคนรู้สึกประทับใจตั้งแต่ช่วงแรกที่ใช้' },
-    { pattern: /เห็นผลใน\s*\d+\s*วัน/gi, to: 'ค่อย ๆ เห็นความเปลี่ยนแปลงตามการใช้งาน' },
-    { pattern: /หายเร็วมาก|หายภายในไม่กี่วัน|หายในไม่กี่ชั่วโมง/gi, to: 'รู้สึกดีขึ้นตามการใช้งานอย่างต่อเนื่อง' },
+    { pattern: /ขาวทันที|ขาวไว|ขาวถาวร|ขาวขึ้นแน่นอน|ขาวใน\s*(3|7)\s*วัน/gi, to: 'ผิวดูสว่างขึ้นอย่างเป็นธรรมชาติ' },
+    { pattern: /หน้าใสทันที|หน้าใสถาวร|\bหน้าใส\b/gi, to: 'ผิวดูสดใสขึ้น' },
+    { pattern: /หน้าเด็กถาวร|หน้าเด็กลง|หน้าเด็ก|ผิวเด็ก|ผิวอ่อนเยาว์/gi, to: 'ผิวดูสดใส' },
+    { pattern: /ยกกระชับทันที|ยกกระชับ/gi, to: 'ผิวดูเฟิร์มขึ้น' },
+    { pattern: /ลดริ้วรอยถาวร|ลดริ้วรอย|ริ้วรอยหาย/gi, to: 'ผิวดูเรียบเนียนขึ้น' },
+    { pattern: /ไม่กลับมาเป็นอีก/gi, to: 'ช่วยดูแลต่อเนื่องได้' },
 
     { pattern: /ไม่มีผลข้างเคียง/gi, to: 'ควรทดลองใช้ให้เหมาะกับตัวเอง' },
     { pattern: /ไม่อันตราย/gi, to: 'ใช้งานอย่างเหมาะสมตามคำแนะนำ' },
-    { pattern: /ไม่ต้องพบแพทย์|ใช้แทนยา|ดีกว่ายา|หยุดยาได้/gi, to: 'ใช้เป็นอีกทางเลือกในชีวิตประจำวัน' },
-    { pattern: /หมอ|แพทย์|แพทย์รับรอง|หมอรับรอง|สูตรหมอ|สูตรแพทย์|สูตรโรงพยาบาล/gi, to: 'ผู้ใช้งานหลายคน' },
-    { pattern: /ผู้เชี่ยวชาญ|ผู้เชี่ยวชาญรับรอง/gi, to: 'หลายคนพูดถึง' },
-    { pattern: /งานวิจัย|งานวิจัยยืนยัน|มีงานวิจัยรองรับ/gi, to: 'มีข้อมูลประกอบจากหลายแหล่ง' },
-    { pattern: /อย\.?|อย\.รับรอง|FDA|FDA Approved|Medical Grade|Clinical Test|Clinical Proven|Medical Use|Clinical Use/gi, to: 'รายละเอียดสินค้า' },
-    { pattern: /โรงพยาบาล/gi, to: 'แหล่งข้อมูลทั่วไป' },
+    { pattern: /ไม่ต้องพบแพทย์|ไม่ต้องหาหมอ|ใช้แทนยา|ดีกว่ายา|ไม่ต้องกินยา|ใช้แทนการรักษา|หยุดยาได้|หยุดยาทันที/gi, to: 'ใช้เป็นอีกทางเลือกในชีวิตประจำวัน' },
+    { pattern: /แพทย์รับรอง|หมอรับรอง|รับรองโดยแพทย์|doctor recommended|doctor approved/gi, to: 'มีผู้ใช้งานพูดถึง' },
+    { pattern: /\bหมอ\b|\bแพทย์\b|ผู้เชี่ยวชาญรับรอง|รับรองโดยผู้เชี่ยวชาญ|ผู้เชี่ยวชาญ/gi, to: 'ผู้ใช้งานหลายคน' },
+    { pattern: /งานวิจัยยืนยัน|มีงานวิจัยรองรับ|งานวิจัย/gi, to: 'มีข้อมูลประกอบจากหลายแหล่ง' },
+    { pattern: /อย\.รับรอง|อย\.|fda approved|fda รับรอง|\bfda\b|medical grade|medical use|clinical test|clinical proven|clinical use|ทดลองในคนไข้|ทดลองในคน|โรงพยาบาล|สูตรหมอ|สูตรแพทย์|สูตรโรงพยาบาล/gi, to: 'รายละเอียดสินค้า' },
+    { pattern: /ผ่านการทดสอบทางการแพทย์/gi, to: 'มีข้อมูลประกอบในรายละเอียดสินค้า' },
 
-    { pattern: /ลดน้ำหนัก|ลดความอ้วน|ผอมไว|ผอมทันที|ผอมถาวร|ผอม/gi, to: 'ดูแลรูปร่าง' },
-    { pattern: /สลายไขมัน|ละลายไขมัน|เผาผลาญไขมัน|ดักจับไขมัน|ดักไขมัน|ระเบิดพุง|บล็อกไขมัน|บล็อกแป้ง|บล็อกน้ำตาล/gi, to: 'ช่วยให้ดูแลรูปร่างได้ง่ายขึ้น' },
-    { pattern: /ดีท็อกซ์|ล้างสารพิษ|ขับสารพิษ|ล้างลำไส้|ขับน้ำตาลออกทันที/gi, to: 'ช่วยให้รู้สึกเบาสบาย' },
+    { pattern: /ดีท็อกซ์|ล้างลำไส้|ขับสารพิษ/gi, to: 'ช่วยให้รู้สึกเบาสบาย' },
+    { pattern: /ฟื้นฟูร่างกาย|ฟื้นฟู|บำบัดร่างกาย|บำบัด/gi, to: 'ดูแลสมดุลร่างกาย' },
+    { pattern: /ภูมิคุ้มกัน|เสริมภูมิ|เสริมภูมิคุ้มกัน|ภูมิดีขึ้นทันที|ภูมิสูงขึ้น/gi, to: 'ดูแลสุขภาพโดยรวม' },
+    { pattern: /กินแล้วหาย/gi, to: 'ใช้แล้วรู้สึกดูแลตัวเองได้ดีขึ้น' },
 
-    { pattern: /กำไรชัวร์|รวย|รวยเร็ว|รายได้หลักแสน|คืนทุนไว|คืนทุน/gi, to: 'ต่อยอดได้' },
-    { pattern: /โปรโมชั่นแรง|ลดแรง|โปรแรงที่สุดในชีวิต/gi, to: 'มีข้อเสนอพิเศษ' },
-    { pattern: /แจกฟรี|แจกเงินฟรี|แถมฟรีไม่จำกัด/gi, to: 'มีของแถมหรือข้อเสนอเพิ่มเติม' },
-    { pattern: /บาท/gi, to: 'ราคา' },
+    { pattern: /ลดน้ำหนัก|ผอมทันที|ผอมถาวร|ผอมไว|ผอมลง|\bผอม\b/gi, to: 'ดูแลรูปร่าง' },
+    { pattern: /น้ำหนักลดทันที|น้ำหนักลดเร็ว|น้ำหนักลด/gi, to: 'ช่วยให้ดูแลรูปร่างได้ต่อเนื่อง' },
+    { pattern: /เผาผลาญไขมัน|สลายไขมัน|ละลายไขมัน|ไขมันหาย/gi, to: 'ช่วยให้ดูแลรูปร่างได้ง่ายขึ้น' },
+    { pattern: /ลดทันที|ลดถาวร|หุ่นดีทันใจ/gi, to: 'ช่วยให้ดูแลรูปร่างและภาพลักษณ์ได้' },
 
-    { pattern: /แอดไลน์|ไลน์|line id|dm|inbox|ติดต่อส่วนตัว|โทร|เบอร์โทร|วอทแอป|whatsapp|เฟซบุ๊ก|facebook|ig|instagram/gi, to: 'กดดูรายละเอียดเพิ่มเติมได้เลย' },
+    { pattern: /แท้แน่นอน|แท้ทุกชิ้น/gi, to: 'สินค้าตรงตามรายละเอียด' },
+    { pattern: /โปรโมชั่นแรง|ลดแรง/gi, to: 'มีข้อเสนอพิเศษ' },
+    { pattern: /ซื้อด่วน|รีบซื้อ|ต้องมี|พลาดไม่ได้/gi, to: 'กดดูรายละเอียดเพิ่มเติมได้เลย' },
+    { pattern: /หมดแล้วหมดเลย|ของขาดตลาด|ของมีจำกัด/gi, to: 'มีจำนวนตามรอบสินค้า' },
+    { pattern: /ไม่ดีคืนเงินทันที|ไม่ดีคืนเงิน|รับคืนเงิน/gi, to: 'มีเงื่อนไขบริการตามรายละเอียด' },
+
+    { pattern: /แจกเงินฟรี|แจกฟรี/gi, to: 'มีข้อเสนอเพิ่มเติม' },
+    { pattern: /โอนเงิน|รับเงินทันที|รับเงิน/gi, to: 'ทำรายการตามระบบที่กำหนด' },
+    { pattern: /กำไรชัวร์|การันตีกำไร|\bกำไร\b/gi, to: 'มีโอกาสต่อยอด' },
+    { pattern: /รวยเร็ว|\bรวย\b/gi, to: 'ต่อยอดได้' },
+    { pattern: /รายได้หลักแสน|รายได้วันละ|\bรายได้\b/gi, to: 'ผลลัพธ์ขึ้นอยู่กับการใช้งานและบริบท' },
+    { pattern: /คืนทุนไว|คืนทุน/gi, to: 'มีโอกาสคุ้มค่าในระยะยาว' },
+    { pattern: /ไม่ต้องลงทุน|ลงทุนน้อยได้มาก|ลงทุนน้อย/gi, to: 'เริ่มต้นได้ง่ายขึ้น' },
+    { pattern: /ได้เงินจริงแน่นอน|ถอนได้ทันที/gi, to: 'มีขั้นตอนตามระบบที่กำหนด' },
+
+    { pattern: /แอดไลน์|ทักไลน์|\bline\b|line id|ไลน์ไอดี|dm|inbox|ติดต่อส่วนตัว|ทักแชทส่วนตัว|โทร|เบอร์โทร|วอทแอป|whatsapp|เฟซบุ๊กส่วนตัว|facebook|เฟซบุ๊ก|\big\b|instagram|สั่งนอกระบบ|ซื้อทางแชท|โอนนอกระบบ/gi, to: 'กดดูรายละเอียดเพิ่มเติมได้เลย' },
+    { pattern: /ปาฏิหาริย์|มหัศจรรย์|เปลี่ยนชีวิต|ชีวิตดีขึ้นทันที|สูตรลับ|เคล็ดลับวงใน|ความลับวงใน|ความลับเฉพาะ|เวทมนตร์/gi, to: 'เป็นอีกมุมมองที่น่าสนใจ' },
+    { pattern: /\bบาท\b/gi, to: 'ราคา' },
 
     { pattern: /aggressively/gi, to: 'confidently' },
     { pattern: /\bangry\b/gi, to: 'determined' },
@@ -5267,45 +5279,25 @@ const SMART_REPLACE_RULES = [
 
 function smartReplaceText(input) {
     if (!input || typeof input !== 'string') return input;
-
     let text = input;
     const sortedRules = [...SMART_REPLACE_RULES].sort((a, b) => String(b.pattern).length - String(a.pattern).length);
-
     for (const rule of sortedRules) {
         text = text.replace(rule.pattern, rule.to);
     }
-
-    text = text
+    return text
         .replace(/\s{2,}/g, ' ')
         .replace(/ๆ\s+ๆ/g, 'ๆ')
         .replace(/\n{3,}/g, '\n\n')
         .trim();
-
-    return text;
 }
 
 function smartReplaceScene(scene) {
     if (!scene || typeof scene !== 'object') return scene;
-
     const next = { ...scene };
-    const keysToClean = [
-        'scene_name',
-        'speaker',
-        'dialogue',
-        'action',
-        'image_prompt',
-        'video_prompt',
-        'caption',
-        'hashtags',
-        'storyboardOverview'
-    ];
-
+    const keysToClean = ['scene_name', 'speaker', 'dialogue', 'action', 'image_prompt', 'video_prompt', 'caption', 'hashtags', 'storyboardOverview'];
     for (const key of keysToClean) {
-        if (typeof next[key] === 'string') {
-            next[key] = smartReplaceText(next[key]);
-        }
+        if (typeof next[key] === 'string') next[key] = smartReplaceText(next[key]);
     }
-
     return next;
 }
 
@@ -5727,7 +5719,6 @@ function renderGeminiResult(parsed, obj, styleNames, mood) {
     if (parsed?.caption) parsed.caption = smartReplaceText(parsed.caption);
     if (parsed?.hashtags) parsed.hashtags = smartReplaceText(parsed.hashtags);
     if (parsed?.storyboardOverview) parsed.storyboardOverview = smartReplaceText(parsed.storyboardOverview);
-
     const container = document.getElementById('storyboardResult');
     document.getElementById('emptyState').style.display = 'none';
     container.style.display = 'block';
@@ -5962,33 +5953,33 @@ const sceneTemplates = {
          camera: "Close-up on product, then pull back to character" },
     5: { name: "ผลลัพธ์ / เปรียบเทียบ", tag: "",
          expression: "amazed, impressed, nodding with approval",
-         action: "showing before/after, comparing results",
+         action: "showing product progression and visual difference in a neutral way",
          extra_img: "",
-         extra_vid: "Dramatic comparison moment, jaw drop reaction",
+         extra_vid: "clear comparison moment with confident reaction",
          camera: "Split-screen feel, side angle" },
     6: { name: "Social Proof / ยืนยัน", tag: "",
          expression: "proud, reassuring, trustworthy smile",
-         action: "giving thumbs up, showing testimonials",
+         action: "giving a confident approval gesture and presenting user feedback in a neutral way",
          extra_img: "",
-         extra_vid: "Breaking into a confident dance or celebration",
+         extra_vid: "confident and trustworthy presentation",
          camera: "Medium shot, eye-level, stable" },
     7: { name: "Shoppertainment Tie-in", tag: "SELL",
          expression: "excited, persuasive, friendly wink",
-         action: "holding the product packaging, pointing at camera",
-         extra_img: "holding the product packaging, pointing at camera, authentic look",
-         extra_vid: "Showing product to camera, pointing at link",
+         action: "holding the product packaging and presenting it clearly to camera",
+         extra_img: "holding the product packaging and presenting it clearly to camera, authentic look",
+         extra_vid: "showing product to camera with an inviting gesture",
          camera: "Close-up on product in hand, then face" },
     8: { name: "Closing - Emotional ROI", tag: "CLOSE",
          expression: "warm smile, waving, urgent but friendly",
-         action: "holding the product packaging, pointing at camera, showing price/promo",
-         extra_img: "holding the product packaging, pointing at camera, authentic look",
-         extra_vid: "Showing product to camera, pointing at link, waving goodbye",
+         action: "holding the product packaging and presenting it clearly to camera, showing price/promo",
+         extra_img: "holding the product packaging and presenting it clearly to camera, authentic look",
+         extra_vid: "showing product to camera with an inviting gesture, waving goodbye",
          camera: "Pull back to full body, then quick zoom to product" }
 };
 
 // ===== GENERATE ALL =====
 async function generateAll() {
-    const obj = document.getElementById('objectInput').value.trim();
+    const obj = smartReplaceText(document.getElementById('objectInput').value.trim());
     if (!obj) { alert('กรุณาใส่ชื่อสิ่งของ/ตัวละคร'); return; }
     if (selectedStyles.length === 0) { alert('กรุณาเลือก Narrative Style อย่างน้อย 1 อัน'); return; }
 
