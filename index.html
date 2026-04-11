@@ -870,16 +870,16 @@
 
         /* ===== COPY BUTTON SUCCESS FLASH ===== */
         .copy-btn.copied {
-            animation: copyFlash 0.4s ease;
-            background: rgba(52,211,153,0.2);
-            border-color: rgba(52,211,153,0.4);
-            color: #6ee7b7;
-        }
-        @keyframes copyFlash {
-            0% { transform: scale(1); }
-            30% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-color: #10b981;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(16,185,129,0.28);
+}
+
+.copy-btn.copied:hover {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #ffffff;
+}
         
         /* ===== TYPING DOTS ANIMATION ===== */
         @keyframes typingDot {
@@ -1163,7 +1163,7 @@
         <div class="sidebar-section">
             <div class="sidebar-section-title"><span class="icon">⚙️</span> Platform Mode</div>
             <div class="prompt-mode-group">
-                <button class="platform-mode-btn active" data-platform="flow" onclick="selectPlatformMode(this)">
+                <button class="platform-mode-btn" data-platform="flow" onclick="selectPlatformMode(this)">
                     <span class="mode-icon">🌊</span>
                     Flow
                     <span class="mode-label">8 วินาที (20-30 คำ)</span>
@@ -1173,7 +1173,7 @@
                     Grok
                     <span class="mode-label">6 วินาที (15-20 คำ)</span>
                 </button>
-                <button class="platform-mode-btn" data-platform="supergrok" onclick="selectPlatformMode(this)">
+                <button class="platform-mode-btn active" data-platform="supergrok" onclick="selectPlatformMode(this)">
                     <span class="mode-icon">🚀</span>
                     Super Grok
                     <span class="mode-label">10 วินาที (30-40 คำ)</span>
@@ -2493,7 +2493,7 @@ let currentPrompt = '';
 let currentObjectName = '';
 let selectedVisualStyle = visualStyles[0]; // default: None
 let selectedPromptMode = 'storytelling'; // 'storytelling' or 'review'
-let selectedPlatformMode = 'flow'; // 'flow' (8s), 'grok' (6s), 'supergrok' (10s)
+let selectedPlatformMode = 'supergrok'; // 'flow' (8s), 'grok' (6s), 'supergrok' (10s)
 let productImageBase64 = null;
 let productImageMimeType = null;
 let characterImageBase64 = null;
@@ -4419,7 +4419,7 @@ function downloadPromptAsJSON() {
             metadata: {
                 product: obj,
                 mode: selectedPromptMode,
-                platformMode: selectedPlatformMode || 'flow',
+                platformMode: selectedPlatformMode || 'supergrok',
                 sceneCount: allScenesArray.length,
                 createdAt: new Date().toISOString(),
                 styles: selectedStyles,
@@ -4492,7 +4492,7 @@ function importJSONFile(input) {
                 const meta = jsonData.metadata;
                 document.getElementById('objectInput').value = meta.product || '';
                 selectedPromptMode = meta.mode || 'storytelling';
-                selectedPlatformMode = meta.platformMode || 'flow';
+               selectedPlatformMode = meta.platformMode || 'supergrok';
                 selectedSceneCount = meta.sceneCount || jsonData.scenes.length;
                 
                 // Update UI for platform mode
@@ -4541,7 +4541,7 @@ function renderImportedStoryboard(jsonData) {
     const meta = jsonData.metadata || {};
     const product = meta.product || 'Imported Storyboard';
     const mode = meta.mode || 'storytelling';
-    const platformMode = meta.platformMode || 'flow';
+    const platformMode = meta.platformMode || 'supergrok';
     const sceneCount = allScenesArray.length;
     
     // Build scene cards HTML
@@ -4567,12 +4567,12 @@ function renderImportedStoryboard(jsonData) {
                 <div class="prompt-block">
                     <div class="prompt-label">🔴 IMAGE PROMPT</div>
                     <div class="prompt-content">${esc(scene.image_prompt || '-')}</div>
-                    <button class="copy-btn" onclick="copyToClipboard(this, \`${escapeForJS(scene.image_prompt || '')}\`)">📋 Copy</button>
+                    <button class="copy-btn" onclick="copyImportedBlock(this, \`${escapeForJS(scene.image_prompt || '')}\`)">📋 Copy</button>
                 </div>
                 <div class="prompt-block">
                     <div class="prompt-label">🟢 VIDEO PROMPT</div>
                     <div class="prompt-content">${esc(scene.video_prompt || '-')}</div>
-                    <button class="copy-btn" onclick="copyToClipboard(this, \`${escapeForJS(scene.video_prompt || '')}\`)">📋 Copy</button>
+                    <button class="copy-btn" onclick="copyImportedBlock(this, \`${escapeForJS(scene.video_prompt || '')}\`)">📋 Copy</button>
                 </div>
             </div>
         </div>
@@ -5872,9 +5872,7 @@ function copyGeminiAll() {
         const btns = document.querySelectorAll('.copy-btn');
         btns.forEach(b => {
             if (b.textContent.includes('Copy All')) {
-                const orig = b.innerHTML;
-                b.innerHTML = '✅ คัดลอกแล้ว!';
-                setTimeout(() => { b.innerHTML = orig; }, 2000);
+                setCopyButtonSuccess(b, '✅ คัดลอกแล้ว!');
             }
         });
     });
@@ -5923,6 +5921,15 @@ function copyToClipboard(text) {
     document.execCommand('copy');
     document.body.removeChild(ta);
     return Promise.resolve();
+}
+
+function setCopyButtonSuccess(btn, successText = '✅ คัดลอกแล้ว') {
+    if (!btn) return;
+
+    btn.classList.add('copied');
+    btn.innerHTML = successText;
+    btn.disabled = true;
+    btn.style.cursor = 'default';
 }
 
 // ===== SCENE DEFINITIONS =====
@@ -6281,9 +6288,7 @@ function copyFullPrompt() {
         const btns = document.querySelectorAll('.action-btn');
         btns.forEach(b => {
             if (b.textContent.includes('คัดลอก Prompt') || b.textContent.includes('Copy All')) {
-                const orig = b.innerHTML;
-                b.innerHTML = '✅ คัดลอกแล้ว!';
-                setTimeout(() => { b.innerHTML = orig; }, 2000);
+                setCopyButtonSuccess(b, '✅ คัดลอกแล้ว!');
             }
         });
     });
@@ -6299,10 +6304,31 @@ function openGemWithPrompt(prompt) {
 // ===== HELPERS =====
 function copyBlock(btn) {
     const block = btn.closest('.prompt-block');
-    const text = block.querySelector('.block-text').textContent;
+    const textEl = block?.querySelector('.block-text');
+    const text = textEl ? textEl.textContent.trim() : '';
+
+    if (!text) {
+        alert('ไม่มีข้อความให้คัดลอก');
+        return;
+    }
+
     copyToClipboard(text).then(() => {
-        btn.textContent = '✓ คัดลอกแล้ว';
-        setTimeout(() => { btn.textContent = 'คัดลอก'; }, 1500);
+        setCopyButtonSuccess(btn);
+    }).catch(() => {
+        alert('คัดลอกไม่สำเร็จ');
+    });
+}
+
+function copyImportedBlock(btn, text) {
+    if (!text) {
+        alert('ไม่มีข้อความให้คัดลอก');
+        return;
+    }
+
+    copyToClipboard(text).then(() => {
+        setCopyButtonSuccess(btn);
+    }).catch(() => {
+        alert('คัดลอกไม่สำเร็จ');
     });
 }
 
