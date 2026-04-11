@@ -6312,10 +6312,15 @@ function copyBlock(btn) {
         return;
     }
 
-    copyToClipboard(text).then(() => {
-        btn.classList.add('copied');   // ✅ ทำให้เป็นสีเขียว
-        btn.textContent = '✓ คัดลอกแล้ว';
-        btn.disabled = true;           // ✅ ค้างสถานะ
+    navigator.clipboard.writeText(text).then(() => {
+
+        // ✅ ถ้ายังไม่เคยกด → เปลี่ยนเป็นเขียว
+        if (!btn.classList.contains('copied')) {
+            btn.classList.add('copied');
+            btn.textContent = '✓ คัดลอกแล้ว';
+        }
+
+        // ❗ ไม่ disable → กดซ้ำได้
     }).catch(() => {
         alert('คัดลอกไม่สำเร็จ');
     });
@@ -6341,9 +6346,12 @@ function copyInline(btn, text) {
     }
 
     navigator.clipboard.writeText(text).then(() => {
-        btn.classList.add('copied');
-        btn.textContent = '✓ คัดลอกแล้ว';
-        btn.disabled = true;
+
+        if (!btn.classList.contains('copied')) {
+            btn.classList.add('copied');
+            btn.textContent = '✓ คัดลอกแล้ว';
+        }
+
     }).catch(() => {
         alert('คัดลอกไม่สำเร็จ');
     });
