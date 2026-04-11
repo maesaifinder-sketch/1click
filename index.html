@@ -3272,22 +3272,22 @@ function renderFollowUpInterface() {
             <div style="font-size:0.95rem;font-weight:600;color:var(--accent);margin-bottom:10px;">💡 DIRECTOR'S TIPS</div>
             
             ${generatedCaption ? `
-            <div style="margin-bottom:10px;padding:10px 14px;background:rgba(108,99,255,0.06);border-radius:10px;border:1px solid rgba(108,99,255,0.12);">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                    <span style="font-size:0.8rem;font-weight:600;color:var(--accent);">📝 Caption</span>
-                    <button onclick="navigator.clipboard.writeText(generatedCaption);this.textContent='✅ Copied!';setTimeout(()=>this.textContent='📋 Copy',1500)" style="font-size:0.7rem;padding:3px 8px;border-radius:6px;border:1px solid rgba(108,99,255,0.3);background:transparent;color:var(--accent);cursor:pointer;">📋 Copy</button>
-                </div>
-                <div style="font-size:0.8rem;color:var(--text-primary);line-height:1.6;white-space:pre-wrap;">${esc(generatedCaption)}</div>
-            </div>` : ''}
-            
-            ${generatedHashtags ? `
-            <div style="margin-bottom:10px;padding:10px 14px;background:rgba(108,99,255,0.06);border-radius:10px;border:1px solid rgba(108,99,255,0.12);">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                    <span style="font-size:0.8rem;font-weight:600;color:var(--accent);">#️⃣ Hashtags</span>
-                    <button onclick="navigator.clipboard.writeText(generatedHashtags);this.textContent='✅ Copied!';setTimeout(()=>this.textContent='📋 Copy',1500)" style="font-size:0.7rem;padding:3px 8px;border-radius:6px;border:1px solid rgba(108,99,255,0.3);background:transparent;color:var(--accent);cursor:pointer;">📋 Copy</button>
-                </div>
-                <div style="font-size:0.8rem;color:var(--text-primary);line-height:1.6;white-space:pre-wrap;">${esc(generatedHashtags)}</div>
-            </div>` : ''}
+<div style="margin-bottom:10px;padding:10px 14px;background:rgba(108,99,255,0.06);border-radius:10px;border:1px solid rgba(108,99,255,0.12);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-size:0.8rem;font-weight:600;color:var(--accent);">📝 Caption</span>
+        <button class="copy-btn" onclick='copyInline(this, ${JSON.stringify(generatedCaption)})' style="font-size:0.7rem;padding:3px 8px;border-radius:6px;border:1px solid rgba(108,99,255,0.3);background:transparent;color:var(--accent);cursor:pointer;">📋 Copy</button>
+    </div>
+    <div style="font-size:0.8rem;color:var(--text-primary);line-height:1.6;white-space:pre-wrap;">${esc(generatedCaption)}</div>
+</div>` : ''}
+
+${generatedHashtags ? `
+<div style="margin-bottom:10px;padding:10px 14px;background:rgba(108,99,255,0.06);border-radius:10px;border:1px solid rgba(108,99,255,0.12);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-size:0.8rem;font-weight:600;color:var(--accent);">#️⃣ Hashtags</span>
+        <button class="copy-btn" onclick='copyInline(this, ${JSON.stringify(generatedHashtags)})' style="font-size:0.7rem;padding:3px 8px;border-radius:6px;border:1px solid rgba(108,99,255,0.3);background:transparent;color:var(--accent);cursor:pointer;">📋 Copy</button>
+    </div>
+    <div style="font-size:0.8rem;color:var(--text-primary);line-height:1.6;white-space:pre-wrap;">${esc(generatedHashtags)}</div>
+</div>` : ''}
 
             <div style="font-size:0.8rem;color:var(--text-secondary);line-height:1.7;">
                 <div style="margin-bottom:6px;">🎨 <b>Mood & Tone:</b> พิมพ์สั่งเปลี่ยนโทนได้ เช่น "เปลี่ยนเป็นโทนตลก" หรือ "ขอโทนดาร์ก"</div>
@@ -6313,7 +6313,9 @@ function copyBlock(btn) {
     }
 
     copyToClipboard(text).then(() => {
-        setCopyButtonSuccess(btn);
+        btn.classList.add('copied');   // ✅ ทำให้เป็นสีเขียว
+        btn.textContent = '✓ คัดลอกแล้ว';
+        btn.disabled = true;           // ✅ ค้างสถานะ
     }).catch(() => {
         alert('คัดลอกไม่สำเร็จ');
     });
@@ -6327,6 +6329,21 @@ function copyImportedBlock(btn, text) {
 
     copyToClipboard(text).then(() => {
         setCopyButtonSuccess(btn);
+    }).catch(() => {
+        alert('คัดลอกไม่สำเร็จ');
+    });
+}
+
+function copyInline(btn, text) {
+    if (!text) {
+        alert('ไม่มีข้อความให้คัดลอก');
+        return;
+    }
+
+    navigator.clipboard.writeText(text).then(() => {
+        btn.classList.add('copied');
+        btn.textContent = '✓ คัดลอกแล้ว';
+        btn.disabled = true;
     }).catch(() => {
         alert('คัดลอกไม่สำเร็จ');
     });
